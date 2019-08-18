@@ -13,19 +13,19 @@ import java.util.List;
 public class ArticleController {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @RequestMapping("/list")
     @ResponseBody
     public ResponseEntity<List<Article>> list() {
-        List<Article> articles = articleRepository.list();
+        List<Article> articles = articleService.list();
         return new ResponseEntity<>(articles, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Article> get(@PathVariable long id) {
-        Article article = articleRepository.get(id);
+        Article article = articleService.find(id);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
@@ -33,7 +33,7 @@ public class ArticleController {
     @ResponseBody
     public ResponseEntity<Article> create(@PathVariable long id) {
         Article article = new Article(id, "name", String.valueOf(Instant.now()));
-        articleRepository.put(article);
+        articleService.save(article);
         return new ResponseEntity<>(article, HttpStatus.CREATED);
     }
 }
