@@ -1,6 +1,5 @@
-package io.github.oxnz.Ingrid.repository;
+package io.github.oxnz.Ingrid.article;
 
-import io.github.oxnz.Ingrid.entity.Article;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;

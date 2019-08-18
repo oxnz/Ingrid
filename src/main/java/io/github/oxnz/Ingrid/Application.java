@@ -1,6 +1,6 @@
 package io.github.oxnz.Ingrid;
 
-import io.github.oxnz.Ingrid.entity.Article;
+import io.github.oxnz.Ingrid.article.Article;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
