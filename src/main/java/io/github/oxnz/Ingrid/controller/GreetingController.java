@@ -1,9 +1,10 @@
 package io.github.oxnz.Ingrid.controller;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("greet")
 public class GreetingController {
     @RequestMapping("/")
     public String index() {

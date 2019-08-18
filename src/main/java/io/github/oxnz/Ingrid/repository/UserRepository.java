@@ -3,7 +3,6 @@ package io.github.oxnz.Ingrid.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.oxnz.Ingrid.entity.User;
-import org.json.JSONObject;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class UserRepository {
+
     private static final String KEY = "user";
     private ObjectMapper objectMapper = new ObjectMapper();
     private StringRedisTemplate redisTemplate;

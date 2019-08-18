@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Article implements Serializable {
 
-    private long id;
-    private String title;
-    private String body;
+    private final long id;
+    private final String title;
+    private final String body;
 
     public Article(long id, String title, String body) {
         this.id = id;
@@ -18,23 +18,12 @@ public class Article implements Serializable {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getBody() {
         return body;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
 }

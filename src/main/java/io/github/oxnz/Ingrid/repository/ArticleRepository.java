@@ -6,10 +6,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ArticleRepository {
+
     public static final String KEY = "article";
     private RedisTemplate<Long, Article> redisTemplate;
     private HashOperations hashOperations;
