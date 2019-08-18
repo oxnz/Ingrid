@@ -1,9 +1,11 @@
-package io.github.oxnz.Ingrid;
+package io.github.oxnz.Ingrid.repository;
 
+import io.github.oxnz.Ingrid.entity.Article;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -17,15 +19,15 @@ public class ArticleRepository {
         hashOperations = redisTemplate.opsForHash();
     }
 
-    public Map<Long, Article> list() {
-        return hashOperations.entries(KEY);
+    public List<Article> list() {
+        return hashOperations.values(KEY);
     }
 
     public Article get(long id) {
         return (Article) hashOperations.get(KEY, id);
     }
 
-    public void set(Article article) {
+    public void put(Article article) {
         hashOperations.put(KEY, article.getId(), article);
     }
 
