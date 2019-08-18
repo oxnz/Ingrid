@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.entity;
+package io.github.oxnz.Ingrid.article;
 
 import java.io.Serializable;
 

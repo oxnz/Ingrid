@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.entity;
+package io.github.oxnz.Ingrid.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

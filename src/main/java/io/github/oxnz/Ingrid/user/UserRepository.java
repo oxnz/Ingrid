@@ -1,8 +1,7 @@
-package io.github.oxnz.Ingrid.repository;
+package io.github.oxnz.Ingrid.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.oxnz.Ingrid.entity.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
