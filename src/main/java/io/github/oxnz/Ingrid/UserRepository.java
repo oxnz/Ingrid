@@ -1,7 +1,8 @@
-package io.github.oxnz.Ingrid.user;
+package io.github.oxnz.Ingrid;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.oxnz.Ingrid.user.User;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -55,7 +56,7 @@ public class UserRepository {
 
     public void put(User user) {
         String s = writeUser(user);
-        hashOperations.put(KEY, String.valueOf(user.getId()), s);
+        hashOperations.put(KEY, String.valueOf(user.id()), s);
     }
 
 }

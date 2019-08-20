@@ -1,5 +1,6 @@
-package io.github.oxnz.Ingrid.user;
+package io.github.oxnz.Ingrid;
 
+import io.github.oxnz.Ingrid.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
