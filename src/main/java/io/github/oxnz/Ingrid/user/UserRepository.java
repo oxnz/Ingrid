@@ -14,11 +14,12 @@ import java.util.stream.Collectors;
 public class UserRepository {
 
     private static final String KEY = "user";
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
     private StringRedisTemplate redisTemplate;
     private HashOperations hashOperations;
 
-    public UserRepository(StringRedisTemplate redisTemplate) {
+    public UserRepository(ObjectMapper objectMapper, StringRedisTemplate redisTemplate) {
+        this.objectMapper = objectMapper;
         this.redisTemplate = redisTemplate;
         hashOperations = redisTemplate.opsForHash();
     }

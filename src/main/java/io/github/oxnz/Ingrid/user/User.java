@@ -8,10 +8,7 @@ public class User {
     private final String firstName;
     private final String lastName;
 
-    @JsonCreator
-    public User(@JsonProperty("id") long id,
-                @JsonProperty("firstName") String firstName,
-                @JsonProperty("lastName") String lastName) {
+    public User(long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
