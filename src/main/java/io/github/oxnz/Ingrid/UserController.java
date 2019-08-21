@@ -10,31 +10,30 @@ import java.time.Instant;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping("/list")
+    @RequestMapping("/users")
     @ResponseBody
     public ResponseEntity<List<User>> list() {
-        List<User> users = userRepository.list();
+        List<User> users = userRepository.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("user/{id}")
     @ResponseBody
     public ResponseEntity<User> get(@PathVariable long id) {
-        User user = userRepository.get(id);
+        User user = userRepository.findOne(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("user/{id}")
     @ResponseBody
     public ResponseEntity<User> create(@PathVariable long id) {
         User user = new User(id, "name", String.valueOf(Instant.now()));
-        userRepository.put(user);
+        userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }

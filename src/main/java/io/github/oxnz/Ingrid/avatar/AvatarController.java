@@ -15,7 +15,7 @@ public class AvatarController {
     @Autowired
     private AvatarService avatarService;
 
-    @RequestMapping("/list")
+    @RequestMapping("/findAll")
     @ResponseBody
     public ResponseEntity<List<Avatar>> list() {
         List<Avatar> avatars = avatarService.findAll();
