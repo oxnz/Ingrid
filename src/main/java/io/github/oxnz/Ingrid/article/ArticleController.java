@@ -15,7 +15,7 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @RequestMapping("/list")
+    @RequestMapping("/findAll")
     @ResponseBody
     public ResponseEntity<List<Article>> list() {
         List<Article> articles = articleService.list();

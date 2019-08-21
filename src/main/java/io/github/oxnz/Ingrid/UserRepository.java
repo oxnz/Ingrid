@@ -41,12 +41,12 @@ public class UserRepository {
         }
     }
 
-    public User get(long id) {
+    public User findOne(long id) {
         String s = (String) hashOperations.get(KEY, String.valueOf(id));
         return readUser(s);
     }
 
-    public List<User> list() {
+    public List<User> findAll() {
         List<String> ss = hashOperations.values(KEY);
         return ss
                 .stream()
@@ -54,7 +54,7 @@ public class UserRepository {
                 .collect(Collectors.toList());
     }
 
-    public void put(User user) {
+    public void save(User user) {
         String s = writeUser(user);
         hashOperations.put(KEY, String.valueOf(user.id()), s);
     }
