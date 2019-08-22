@@ -6,7 +6,7 @@ public class AvatarTest {
 
     @Test
     public void toStringT() {
-        Avatar avatar = new Avatar(128, alt);
+        Avatar avatar = new Avatar(128, "alt");
         System.out.println(avatar.toString());
     }
 }
