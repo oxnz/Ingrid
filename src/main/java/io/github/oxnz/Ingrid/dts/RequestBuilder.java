@@ -1,9 +1,9 @@
 package io.github.oxnz.Ingrid.dts;
 
-import java.net.http.HttpRequest;
+import org.apache.http.client.methods.HttpPost;
 
 public interface RequestBuilder {
 
-    HttpRequest buildRequest(TxRecord record);
+    HttpPost buildRequest(TxRecord record, DestSpec destSpec);
 
 }

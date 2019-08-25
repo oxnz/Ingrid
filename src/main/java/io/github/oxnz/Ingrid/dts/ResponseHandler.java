@@ -1,7 +1,7 @@
 package io.github.oxnz.Ingrid.dts;
 
-import java.net.http.HttpResponse;
+import org.apache.http.HttpResponse;
 
 public interface ResponseHandler {
-    TxResult handleResponse(HttpResponse<String> response);
+    TxResult handleResponse(HttpResponse response);
 }
