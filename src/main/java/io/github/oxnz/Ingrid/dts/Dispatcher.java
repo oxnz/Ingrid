@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Dispatcher {
 
-    public Iterable<DestSpec> dispatch(TxRecord record) {
+    public Iterable<DestSpec> dispatch(CxRecord record) {
         List<DestSpec> destSpecs = new ArrayList<>();
         return destSpecs;
     }

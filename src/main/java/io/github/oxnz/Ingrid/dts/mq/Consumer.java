@@ -10,12 +10,12 @@ public class Consumer implements AutoCloseable {
 
     final Logger log = LoggerFactory.getLogger(getClass());
 
-    final DataLoader<TxRecord, Long> dataLoader;
+    final DataLoader<CxRecord, Long> dataLoader;
     final Dispatcher dispatcher;
     final TxService transfer;
     final MeterRegistry metrics;
 
-    public Consumer(DataLoader<TxRecord, Long> dataLoader, Dispatcher dispatcher, TxService transfer, MeterRegistry metrics) {
+    public Consumer(DataLoader<CxRecord, Long> dataLoader, Dispatcher dispatcher, TxService transfer, MeterRegistry metrics) {
         this.dataLoader = dataLoader;
         this.dispatcher = dispatcher;
         this.transfer = transfer;
@@ -24,11 +24,11 @@ public class Consumer implements AutoCloseable {
 
     void process(TxEvent event) {
         long id = event.getId();
-        TxRecord record = dataLoader.fetchById(id);
+        CxRecord record = dataLoader.fetchById(id);
         process(record);
     }
 
-    void process(TxRecord record) {
+    void process(CxRecord record) {
         Iterable<DestSpec> destSpecs = dispatcher.dispatch(record);
         destSpecs.forEach(destSpec -> {
             try {
@@ -40,7 +40,7 @@ public class Consumer implements AutoCloseable {
         });
     }
 
-    void process(TxRecord record, DestSpec destSpec) throws TxException {
+    void process(CxRecord record, DestSpec destSpec) throws TxException {
         TxResult result = transfer.post(record, destSpec);
         System.out.println(result);
     }

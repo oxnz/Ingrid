@@ -13,7 +13,7 @@ public class TxService implements AutoCloseable {
 
     }
 
-    public TxResult post(TxRecord record, DestSpec destSpec) throws TxException {
+    public TxResult post(CxRecord record, DestSpec destSpec) throws TxException {
         HttpPost request = destSpec.requestBuilder.buildRequest(record, destSpec);
         try {
             return httpExecutionService.execute(request, destSpec.responseHandler);
