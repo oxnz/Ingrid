@@ -6,9 +6,14 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.config.NamingConvention;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -26,6 +31,27 @@ public class Application {
         log.info("starting ...");
         SpringApplication.run(Application.class, args);
         log.debug("--Application Started--");
+    }
+
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        return registry -> registry.config().commonTags("app", "ingrid");
+    }
+
+    @Bean
+    MeterRegistryCustomizer<SimpleMeterRegistry> metricsNamingConvention() {
+        return registry -> registry.config().namingConvention(new NamingConvention() {
+            @Override
+            public String name(String name, Meter.Type type, String baseUnit) {
+                String suffix;
+                switch (type) {
+                    case TIMER: suffix = "timer"; break;
+                    case COUNTER: suffix = "counter"; break;
+                    default: suffix = type.name();
+                }
+                return String.format("%s.%s.%s", name, suffix, baseUnit);
+            }
+        });
     }
 
     @Bean
