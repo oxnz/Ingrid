@@ -1,18 +1,29 @@
 package io.github.oxnz.Ingrid.dts;
 
-import java.net.http.HttpRequest;
+import org.apache.http.client.methods.HttpPost;
 
-public class TxService {
+import java.io.IOException;
 
-    private final HttpTransmitter transmitter;
+public class TxService implements AutoCloseable {
 
-    public TxService(HttpTransmitter transmitter) {
-        this.transmitter = transmitter;
+    private final HttpExecutionService httpExecutionService;
+
+    public TxService(HttpExecutionService httpExecutionService) {
+        this.httpExecutionService = httpExecutionService;
+
     }
 
-    public TxResult transmit(TxRecord record, DestSpec destSpec) {
-        HttpRequest request = destSpec.requestBuilder.buildRequest(record);
-        return transmitter.transmit(request);
+    public TxResult post(TxRecord record, DestSpec destSpec) throws TxException {
+        HttpPost request = destSpec.requestBuilder.buildRequest(record, destSpec);
+        try {
+            return httpExecutionService.execute(request, destSpec.responseHandler);
+        } catch (IOException e) {
+            throw new TxException(e);
+        }
     }
 
+    @Override
+    public void close() throws IOException {
+        httpExecutionService.close();
+    }
 }
