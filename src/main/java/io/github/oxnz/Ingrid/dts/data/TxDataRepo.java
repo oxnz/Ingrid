@@ -1,24 +1,23 @@
 package io.github.oxnz.Ingrid.dts.data;
 
-import io.github.oxnz.Ingrid.dts.CxRecord;
 import io.github.oxnz.Ingrid.repo.DataStore;
 
 import java.util.Optional;
 
-public class TxDataRepo implements DataStore<CxRecord, Long> {
+public class TxDataRepo implements DataStore<TxRecord, Long> {
 
     @Override
-    public Optional<CxRecord> findById(Long aLong) {
+    public Optional<TxRecord> findById(Long aLong) {
         return Optional.empty();
     }
 
     @Override
-    public Iterable<CxRecord> findAll() {
+    public Iterable<TxRecord> findAll() {
         return null;
     }
 
     @Override
-    public Iterable<CxRecord> findAllById(Iterable<Long> longs) {
+    public Iterable<TxRecord> findAllById(Iterable<Long> longs) {
         return null;
     }
 
@@ -28,12 +27,12 @@ public class TxDataRepo implements DataStore<CxRecord, Long> {
     }
 
     @Override
-    public <S extends CxRecord> S save(S entity) {
+    public <S extends TxRecord> S save(S entity) {
         return null;
     }
 
     @Override
-    public <S extends CxRecord> Iterable<S> save(Iterable<S> entities) {
+    public <S extends TxRecord> Iterable<S> save(Iterable<S> entities) {
         return null;
     }
 
@@ -43,12 +42,12 @@ public class TxDataRepo implements DataStore<CxRecord, Long> {
     }
 
     @Override
-    public void delete(CxRecord entity) {
+    public void delete(TxRecord entity) {
 
     }
 
     @Override
-    public void deleteAll(Iterable<? extends CxRecord> entities) {
+    public void deleteAll(Iterable<? extends TxRecord> entities) {
 
     }
 

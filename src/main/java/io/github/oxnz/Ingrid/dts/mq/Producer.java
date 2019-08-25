@@ -1,18 +1,12 @@
 package io.github.oxnz.Ingrid.dts.mq;
 
 import io.github.oxnz.Ingrid.dts.CxRecord;
-import io.github.oxnz.Ingrid.dts.data.TxDataRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Producer implements AutoCloseable {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final TxDataRepo txDataRepo;
-
-    public Producer(TxDataRepo txDataRepo) {
-        this.txDataRepo = txDataRepo;
-    }
 
     TxEvent transform(CxRecord record) {
         TxEvent event = new TxEvent(record.getId());
@@ -20,7 +14,6 @@ public class Producer implements AutoCloseable {
     }
 
     void post(CxRecord record) {
-        record = txDataRepo.save(record);
         TxEvent event = transform(record);
         System.out.println("pub: " + event.getId());
     }

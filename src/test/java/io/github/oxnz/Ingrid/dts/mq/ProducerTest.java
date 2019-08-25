@@ -11,7 +11,7 @@ public class ProducerTest {
 
     @Test
     public void post() throws Exception {
-        try (Producer producer = new Producer(txDataRepo)) {
+        try (Producer producer = new Producer()) {
         }
     }
 }
