@@ -1,9 +1,14 @@
 package io.github.oxnz.Ingrid.dts.mq;
 
 import io.github.oxnz.Ingrid.dts.DestSpec;
-import io.github.oxnz.Ingrid.dts.Dispatcher;
+import io.github.oxnz.Ingrid.dts.TxException;
+import io.github.oxnz.Ingrid.dts.TxResult;
+import io.github.oxnz.Ingrid.dts.TxService;
 import io.github.oxnz.Ingrid.dts.data.TxDataRepo;
 import io.github.oxnz.Ingrid.dts.data.TxRecord;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
@@ -13,16 +18,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.util.List;
 
 @Service
 public class RedisMessageConsumer implements MessageListener {
 
-    private final TxDataRepo txDataRepo;
-    private final Dispatcher dispatcher;
+    final Logger log = LoggerFactory.getLogger(getClass());
 
-    public RedisMessageConsumer(TxDataRepo txDataRepo, Dispatcher dispatcher) {
-        this.txDataRepo = txDataRepo;
-        this.dispatcher = dispatcher;
+    private final MeterRegistry metrics;
+    private final TxService txService;
+
+    public RedisMessageConsumer(MeterRegistry metrics, TxService txService) {
+        this.metrics = metrics;
+        this.txService = txService;
     }
 
     @Override
@@ -30,16 +38,11 @@ public class RedisMessageConsumer implements MessageListener {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(message.getBody());
              ObjectInput in = new ObjectInputStream(bis)) {
             TxEvent event = (TxEvent) in.readObject();
-            process(event);
-        } catch (IOException | ClassNotFoundException e) {
+            log.debug("msg: {}", event);
+            txService.process(event.id);
+        } catch (IOException | ClassNotFoundException | TxException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void process(TxEvent event) {
-        System.out.println(event);
-        TxRecord record = txDataRepo.findById(event.id).orElseThrow(NoResultException::new);
-        Iterable<DestSpec> destSpecs = dispatcher.dispatch(record);
-        System.out.println(destSpecs);
-    }
 }

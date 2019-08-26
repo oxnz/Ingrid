@@ -14,6 +14,15 @@ public class TxRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    public TxCategory getCat() {
+        return cat;
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
     private TxCategory cat;
     private String ref;
 
