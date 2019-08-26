@@ -1,11 +1,28 @@
 package io.github.oxnz.Ingrid.dts.data;
 
+import io.github.oxnz.Ingrid.dts.TxCategory;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import javax.persistence.Entity;
+
+@Entity
 public class TxRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private TxCategory cat;
+    private String ref;
+
+    public TxRecord(TxCategory cat, String ref) {
+        this.cat = cat;
+        this.ref = ref;
+    }
+
+    public long getId() {
+        return id;
+    }
 }
