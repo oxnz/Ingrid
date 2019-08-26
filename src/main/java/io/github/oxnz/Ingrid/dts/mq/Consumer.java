@@ -29,7 +29,7 @@ public class Consumer implements AutoCloseable {
     }
 
     void process(CxRecord record) {
-        Iterable<DestSpec> destSpecs = dispatcher.dispatch(record);
+        Iterable<DestSpec> destSpecs = null;// = dispatcher.dispatch(record);
         destSpecs.forEach(destSpec -> {
             try {
                 process(record, destSpec);
