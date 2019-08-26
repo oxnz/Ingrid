@@ -6,6 +6,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
+import io.github.oxnz.Ingrid.dts.mq.RedisMessageConsumer;
+import io.github.oxnz.Ingrid.dts.mq.RedisMessageProducer;
+import io.github.oxnz.Ingrid.dts.mq.TxEvent;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.NamingConvention;
@@ -21,6 +24,9 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @SpringBootApplication
 public class Application {
@@ -45,9 +51,14 @@ public class Application {
             public String name(String name, Meter.Type type, String baseUnit) {
                 String suffix;
                 switch (type) {
-                    case TIMER: suffix = "timer"; break;
-                    case COUNTER: suffix = "counter"; break;
-                    default: suffix = type.name();
+                    case TIMER:
+                        suffix = "timer";
+                        break;
+                    case COUNTER:
+                        suffix = "counter";
+                        break;
+                    default:
+                        suffix = type.name();
                 }
                 return String.format("%s.%s.%s", name, suffix, baseUnit);
             }
@@ -79,5 +90,38 @@ public class Application {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
+
+    @Bean
+    RedisTemplate<Long, TxEvent> txEventRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<Long, TxEvent> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
+    }
+
+    /**
+     * redis MQ
+     */
+
+    @Bean
+    ChannelTopic channelTopic() {
+        return new ChannelTopic("dts");
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter(RedisMessageConsumer redisMessageConsumer) {
+        return new MessageListenerAdapter(redisMessageConsumer);
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory,
+                                                                       MessageListenerAdapter messageListenerAdapter,
+                                                                       ChannelTopic channelTopic) {
+        RedisMessageListenerContainer container
+                = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory);
+        container.addMessageListener(messageListenerAdapter, channelTopic);
+        return container;
+    }
+
 
 }
