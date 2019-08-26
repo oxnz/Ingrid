@@ -6,16 +6,17 @@ import javax.persistence.*;
 
 @Entity
 public class TxResult {
+    public boolean succ;
+    public String msg;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "record_id")
     private TxRecord record;
-    public  boolean succ;
-    public  String msg;
 
-    public TxResult() {}
+    public TxResult() {
+    }
 
     public TxResult(TxRecord record, boolean succ, String msg) {
         this.record = record;
