@@ -78,7 +78,7 @@ public class HttpExecutionService implements AutoCloseable {
 
     @Override
     public void close() throws IOException {
-        if (! closed.get()) executionService.close();
+        if (!closed.get()) executionService.close();
     }
 
     private interface Defaults {
