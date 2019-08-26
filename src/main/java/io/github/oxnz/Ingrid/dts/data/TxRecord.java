@@ -10,10 +10,10 @@ import javax.persistence.Entity;
 
 @Entity
 public class TxRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private TxCategory cat;
     private String ref;
 
@@ -22,7 +22,10 @@ public class TxRecord {
         this.ref = ref;
     }
 
-    public long getId() {
+    public TxRecord() {
+    }
+
+    public Long getId() {
         return id;
     }
 }
