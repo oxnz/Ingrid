@@ -5,6 +5,8 @@ import io.github.oxnz.Ingrid.dts.data.TxRecord;
 import io.github.oxnz.Ingrid.dts.mq.RedisMessageProducer;
 import io.github.oxnz.Ingrid.dts.mq.TxEvent;
 import io.micrometer.core.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +17,29 @@ import java.util.List;
 @RequestMapping("tx")
 public class TxController {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private final TxDataRepo txDataRepo;
+    private final TxResultRepo txResultRepo;
     private final RedisMessageProducer messageProducer;
 
-    public TxController(TxDataRepo txDataRepo, RedisMessageProducer messageProducer) {
+    public TxController(TxDataRepo txDataRepo, TxResultRepo txResultRepo, RedisMessageProducer messageProducer) {
         this.txDataRepo = txDataRepo;
+        this.txResultRepo = txResultRepo;
         this.messageProducer = messageProducer;
     }
 
-    @GetMapping("")
-    @Timed(value = "index")
+    @GetMapping("records")
+    @Timed
     public ResponseEntity<List<TxRecord>> index() {
         List<TxRecord> entities = txDataRepo.findAll();
+        return new ResponseEntity<>(entities, HttpStatus.OK);
+    }
+
+    @GetMapping("results")
+    @Timed
+    public ResponseEntity<List<TxResult>> txResults() {
+        List<TxResult> entities = txResultRepo.findAll();
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 

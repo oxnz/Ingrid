@@ -47,10 +47,11 @@ public class TxService implements AutoCloseable {
     }
 
     public HttpExecutionResult post(TxRecord record, DestSpec destSpec) {
-        HttpPost request = destSpec.requestBuilder.buildRequest(record, destSpec);
+        HttpPost request = destSpec.requestBuilder().buildRequest(record, destSpec);
         try {
-            return httpExecutionService.execute(request, null, destSpec.responseHandler);
+            return httpExecutionService.execute(request, null, destSpec.responseHandler());
         } catch (InterruptedException | ExecutionException e) {
+            log.error("post", e);
             return new HttpExecutionResult(false, e.getMessage());
         }
     }

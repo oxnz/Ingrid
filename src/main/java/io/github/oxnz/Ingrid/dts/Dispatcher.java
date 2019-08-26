@@ -11,6 +11,7 @@ public class Dispatcher {
 
     public List<DestSpec> dispatch(TxRecord record) {
         List<DestSpec> destSpecs = new ArrayList<>();
+        destSpecs.add(new WuHanPSBDestSpec());
         return destSpecs;
     }
 
