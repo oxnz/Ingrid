@@ -3,6 +3,7 @@ package io.github.oxnz.Ingrid.dts;
 import org.apache.http.client.methods.HttpPost;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class TxService implements AutoCloseable {
 
@@ -16,8 +17,8 @@ public class TxService implements AutoCloseable {
     public TxResult post(CxRecord record, DestSpec destSpec) throws TxException {
         HttpPost request = destSpec.requestBuilder.buildRequest(record, destSpec);
         try {
-            return httpExecutionService.execute(request, destSpec.responseHandler);
-        } catch (IOException e) {
+            return httpExecutionService.execute(request, null, destSpec.responseHandler);
+        } catch (InterruptedException | ExecutionException e) {
             throw new TxException(e);
         }
     }

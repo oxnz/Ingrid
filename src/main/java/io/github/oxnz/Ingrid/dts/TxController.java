@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("tx")
 public class TxController {
@@ -21,13 +23,14 @@ public class TxController {
         this.messageProducer = messageProducer;
     }
 
-    @RequestMapping("")
+    @GetMapping("")
     @Timed(value = "index")
-    public String index() {
-        return "dts";
+    public ResponseEntity<List<TxRecord>> index() {
+        List<TxRecord> entities = txDataRepo.findAll();
+        return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
-    @PostMapping("{cat}/{id}")
+    @PostMapping("")
     @Timed(value = "post")
     public ResponseEntity<TxResponse> post(@RequestBody TxRequest request) {
         TxResponse entity = process(request);

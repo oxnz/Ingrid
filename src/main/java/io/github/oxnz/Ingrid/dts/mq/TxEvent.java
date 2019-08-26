@@ -1,6 +1,8 @@
 package io.github.oxnz.Ingrid.dts.mq;
 
-public class TxEvent {
+import java.io.Serializable;
+
+public class TxEvent implements Serializable {
     public long getId() {
         return id;
     }
