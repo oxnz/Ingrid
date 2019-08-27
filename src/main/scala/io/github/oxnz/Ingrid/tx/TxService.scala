@@ -2,7 +2,6 @@ package io.github.oxnz.Ingrid.tx
 
 import java.io.IOException
 import java.util
-import java.util.Set
 import java.util.concurrent.ExecutionException
 
 import javax.persistence.NoResultException
@@ -10,7 +9,7 @@ import org.apache.http.client.methods.HttpPost
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.stereotype.Service
 
-@Service class TxService(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val dispatcher: Dispatcher, val httpExecutionService: HttpExecutionService) extends AutoCloseable {
+@Service class TxService(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val dispatcher: TxDispatcher, val httpExecutionService: HttpExecutionService) extends AutoCloseable {
   final private[tx] val log: Logger = LoggerFactory.getLogger(getClass)
 
   @throws[TxException]
@@ -22,8 +21,8 @@ import org.springframework.stereotype.Service
       // cxRecord cxRecord = cxService.complete(record.getId());
       // record.data = cxRecord.toString();
       // txRecordRepo.save(record);
-      val destSpecs: util.Set[DestSpec] = dispatcher.dispatch(record)
-      destSpecs.forEach((destSpec: DestSpec) => post(record, destSpec))
+      val destSpecs: Set[DestSpec] = dispatcher.dispatch(record)
+      destSpecs.map(post(record, _))
     } catch {
       case e: Exception =>
         throw new TxException(e)

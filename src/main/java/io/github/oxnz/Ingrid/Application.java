@@ -6,8 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
-import io.github.oxnz.Ingrid.tx.Dispatcher;
 import io.github.oxnz.Ingrid.tx.TestDestSpec;
+import io.github.oxnz.Ingrid.tx.TxDispatcher;
 import io.github.oxnz.Ingrid.tx.TxEvent;
 import io.github.oxnz.Ingrid.tx.mq.RedisMessageConsumer;
 import io.micrometer.core.instrument.Meter;
@@ -125,10 +125,10 @@ public class Application {
     }
 
     @Bean
-    public Dispatcher dispatcher(TestDestSpec testDestSpec) {
-        Dispatcher dispatcher = new Dispatcher();
-        dispatcher.register(testDestSpec);
-        return dispatcher;
+    public TxDispatcher txDispatcher(TestDestSpec testDestSpec) {
+        TxDispatcher txDispatcher = new TxDispatcher();
+        txDispatcher.register(testDestSpec);
+        return txDispatcher;
     }
 
 }
