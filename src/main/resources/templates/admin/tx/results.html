@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html th:replace="~{view :: view(~{::title}, ~{::section})}">
+<head>
+    <title>Ingrid Tx Admin</title>
+</head>
+<body>
+<section>
+    <table class="table" id="results">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">record</th>
+            <th scope="col">Succeeded</th>
+            <th scope="col">Message</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="result: ${results}">
+            <td th:text="${result.id}" scope="row">id</td>
+            <td th:text="${result.record}">record</td>
+            <td th:text="${result.succ}">succ</td>
+            <td th:text="${result.msg}">msg</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

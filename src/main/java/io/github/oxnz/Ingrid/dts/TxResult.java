@@ -14,8 +14,8 @@ public class TxResult {
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "record_id")
     private TxRecord record;
-    public boolean succ;
-    public String msg;
+    private boolean succ;
+    private String msg;
 
     public TxResult() {
     }
@@ -24,6 +24,22 @@ public class TxResult {
         this.record = record;
         this.succ = succ;
         this.msg = msg;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public TxRecord getRecord() {
+        return record;
+    }
+
+    public boolean isSucc() {
+        return succ;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     @Override
