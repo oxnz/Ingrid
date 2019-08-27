@@ -1,5 +1,6 @@
 package io.github.oxnz.Ingrid.tx.mq;
 
+import io.github.oxnz.Ingrid.tx.TxEvent;
 import io.github.oxnz.Ingrid.tx.TxException;
 import io.github.oxnz.Ingrid.tx.TxService;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -33,7 +34,7 @@ public class RedisMessageConsumer implements MessageListener {
              ObjectInput in = new ObjectInputStream(bis)) {
             TxEvent event = (TxEvent) in.readObject();
             log.debug("msg: {}", event);
-            txService.process(event.id);
+            txService.process(event.id());
         } catch (IOException | ClassNotFoundException | TxException e) {
             throw new RuntimeException(e);
         }
