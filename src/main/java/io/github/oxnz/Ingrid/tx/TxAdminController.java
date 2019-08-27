@@ -1,7 +1,6 @@
 package io.github.oxnz.Ingrid.tx;
 
 import io.github.oxnz.Ingrid.tx.mq.RedisMessageProducer;
-import io.github.oxnz.Ingrid.tx.mq.TxEvent;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
