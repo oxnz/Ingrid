@@ -43,7 +43,7 @@ public class TestDestSpec implements DestSpec {
     }
 
     @Override
-    public RequestBuilder requestBuilder() {
+    public TxRequestBuilder requestBuilder() {
         return (record, destSpec) -> {
             HttpPost request = new HttpPost(CHECKIN_URI);
             try {

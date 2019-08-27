@@ -6,6 +6,6 @@ public interface DestSpec {
 
     boolean isInterested(TxCategory cat);
     ResponseHandler<? extends HttpExecutionResult> responseHandler();
-    RequestBuilder requestBuilder();
+    TxRequestBuilder requestBuilder();
 
 }

@@ -1,6 +1,5 @@
-package io.github.oxnz.Ingrid.dcs;
+package io.github.oxnz.Ingrid.cx;
 
-import io.github.oxnz.Ingrid.tx.CxRecord;
 import io.micrometer.core.instrument.MeterRegistry;
 
 public class CheckinDataCxService extends CxService<CheckinDataCxReq> {
@@ -10,7 +9,7 @@ public class CheckinDataCxService extends CxService<CheckinDataCxReq> {
     }
 
     @Override
-    public CxRecord process(CheckinDataCxReq request) throws Exception {
+    public CxRequest process(CheckinDataCxReq request) throws Exception {
         return null;
     }
 
