@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.NoResultException;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -31,22 +31,23 @@ public class TxService implements AutoCloseable {
 
     public void process(long id) throws TxException {
         try {
-            log.debug("processing {}", id);
             TxRecord record = txDataRepo.findById(id).orElseThrow(NoResultException::new);
             log.debug("record: {}", record);
-            List<DestSpec> destSpecs = dispatcher.dispatch(record);
-            for (DestSpec destSpec : destSpecs) {
-                HttpExecutionResult httpExecResult = post(record, destSpec);
-                TxResult txResult = new TxResult(record, httpExecResult.succeeded(), httpExecResult.message());
-                log.debug("tx: {} {}", record, txResult);
-                txResultRepo.save(txResult);
-            }
+            Set<DestSpec> destSpecs = dispatcher.dispatch(record);
+            destSpecs.forEach(destSpec -> post(record, destSpec));
         } catch (Exception e) {
             throw new TxException(e);
         }
     }
 
-    public HttpExecutionResult post(TxRecord record, DestSpec destSpec) {
+    private void post(TxRecord record, DestSpec destSpec) {
+        HttpExecutionResult httpExecResult = doPost(record, destSpec);
+        TxResult txResult = new TxResult(record, httpExecResult.succeeded(), httpExecResult.message());
+        txResultRepo.save(txResult);
+        log.debug("result: {}", txResult);
+    }
+
+    private HttpExecutionResult doPost(TxRecord record, DestSpec destSpec) {
         HttpPost request = destSpec.requestBuilder().buildRequest(record, destSpec);
         try {
             return httpExecutionService.execute(request, null, destSpec.responseHandler());

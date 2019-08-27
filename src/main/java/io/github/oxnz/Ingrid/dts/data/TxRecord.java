@@ -1,6 +1,7 @@
 package io.github.oxnz.Ingrid.dts.data;
 
 import io.github.oxnz.Ingrid.dts.TxCategory;
+import org.springframework.core.style.ToStringCreator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,12 +16,26 @@ public class TxRecord {
     private Long id;
     private TxCategory cat;
     private String ref;
+    private String state;
+    private String city;
 
-    public TxRecord(TxCategory cat, String ref) {
+    public TxRecord() {
+    }
+
+    public TxRecord(TxCategory cat, String ref, String state, String city) {
         this.cat = cat;
         this.ref = ref;
+        this.state = state;
+        this.city = city;
     }
-    public TxRecord() {
+
+
+    public String getState() {
+        return state;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public TxCategory getCat() {
@@ -33,5 +48,16 @@ public class TxRecord {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this)
+                .append("id", id)
+                .append("cat", cat)
+                .append("ref", ref)
+                .append("state", state)
+                .append("city", city)
+                .toString();
     }
 }

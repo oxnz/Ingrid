@@ -1,5 +1,7 @@
 package io.github.oxnz.Ingrid.dts.mq;
 
+import org.springframework.core.style.ToStringCreator;
+
 import java.io.Serializable;
 
 public class TxEvent implements Serializable {
@@ -11,5 +13,10 @@ public class TxEvent implements Serializable {
 
     public long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this).append("id", id).toString();
     }
 }

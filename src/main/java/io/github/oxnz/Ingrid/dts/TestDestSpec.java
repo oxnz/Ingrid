@@ -1,16 +1,16 @@
 package io.github.oxnz.Ingrid.dts;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.oxnz.Ingrid.dts.mq.TxEvent;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -18,10 +18,15 @@ import java.net.URI;
 
 @Component
 @Region(state = "CA", city = "SF")
-public class WuHanPSBDestSpec implements DestSpec {
+public class TestDestSpec implements DestSpec {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final URI CHECKIN_URI = URI.create("http://localhost:8000/echo");
+
+    @Override
+    public boolean isInterested(TxCategory cat) {
+        return true;
+    }
 
     @Override
     public ResponseHandler<? extends HttpExecutionResult> responseHandler() {
