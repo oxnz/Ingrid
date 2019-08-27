@@ -33,6 +33,10 @@ public class TxService implements AutoCloseable {
         try {
             TxRecord record = txDataRepo.findById(id).orElseThrow(NoResultException::new);
             log.debug("record: {}", record);
+            // TODO: cxService
+            // cxRecord cxRecord = cxService.complete(record.getId());
+            // record.data = cxRecord.toString();
+            // txDataRepo.save(record);
             Set<DestSpec> destSpecs = dispatcher.dispatch(record);
             destSpecs.forEach(destSpec -> post(record, destSpec));
         } catch (Exception e) {
