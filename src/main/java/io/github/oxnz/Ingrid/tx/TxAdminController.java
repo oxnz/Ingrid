@@ -1,14 +1,10 @@
-package io.github.oxnz.Ingrid.dts;
+package io.github.oxnz.Ingrid.tx;
 
-import io.github.oxnz.Ingrid.dts.data.TxDataRepo;
-import io.github.oxnz.Ingrid.dts.data.TxRecord;
-import io.github.oxnz.Ingrid.dts.mq.RedisMessageProducer;
-import io.github.oxnz.Ingrid.dts.mq.TxEvent;
+import io.github.oxnz.Ingrid.tx.mq.RedisMessageProducer;
+import io.github.oxnz.Ingrid.tx.mq.TxEvent;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +18,12 @@ public class TxAdminController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final TxDataRepo txDataRepo;
+    private final TxRecordRepo txRecordRepo;
     private final TxResultRepo txResultRepo;
     private final RedisMessageProducer messageProducer;
 
-    public TxAdminController(TxDataRepo txDataRepo, TxResultRepo txResultRepo, RedisMessageProducer messageProducer) {
-        this.txDataRepo = txDataRepo;
+    public TxAdminController(TxRecordRepo txRecordRepo, TxResultRepo txResultRepo, RedisMessageProducer messageProducer) {
+        this.txRecordRepo = txRecordRepo;
         this.txResultRepo = txResultRepo;
         this.messageProducer = messageProducer;
     }
@@ -45,7 +41,7 @@ public class TxAdminController {
 
     @GetMapping("records")
     public String txRecords(Model model) {
-        List<TxRecord> records = txDataRepo.findAll();
+        List<TxRecord> records = txRecordRepo.findAll();
         model.addAttribute("records", records);
         return "admin/tx/records";
     }
@@ -59,9 +55,9 @@ public class TxAdminController {
 
     private TxResponse process(TxRequest request) {
         TxRecord record = new TxRecord(request.cat, request.ref, request.state, request.city);
-        record = txDataRepo.save(record);
-        TxEvent event = new TxEvent(record.getId());
+        record = txRecordRepo.save(record);
+        TxEvent event = new TxEvent(record.id());
         messageProducer.publish(event);
-        return new TxResponse(record.getId());
+        return new TxResponse(record.id());
     }
 }

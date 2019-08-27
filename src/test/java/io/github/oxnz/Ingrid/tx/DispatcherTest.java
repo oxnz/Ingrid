@@ -1,12 +1,9 @@
-package io.github.oxnz.Ingrid.dts;
+package io.github.oxnz.Ingrid.tx;
 
 import org.junit.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.Assert.*;
 
 public class DispatcherTest {
 

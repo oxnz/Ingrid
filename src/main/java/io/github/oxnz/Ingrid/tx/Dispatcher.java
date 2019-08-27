@@ -1,13 +1,10 @@
-package io.github.oxnz.Ingrid.dts;
+package io.github.oxnz.Ingrid.tx;
 
-import io.github.oxnz.Ingrid.dts.data.TxRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Dispatcher {
@@ -44,7 +41,7 @@ public class Dispatcher {
     public Set<DestSpec> dispatch(TxRecord record) {
         Objects.requireNonNull(record, "record should not be null");
         log.debug("dispatch: {}", record);
-        return dispatch(record.getState(), record.getCity(), record.getCat());
+        return dispatch(record.state(), record.city(), record.cat());
     }
 
     public Set<DestSpec> dispatch(String state, String city, TxCategory cat) {

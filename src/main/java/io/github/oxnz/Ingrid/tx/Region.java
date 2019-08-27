@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.dts;
+package io.github.oxnz.Ingrid.tx;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

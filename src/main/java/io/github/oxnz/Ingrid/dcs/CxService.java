@@ -1,6 +1,6 @@
 package io.github.oxnz.Ingrid.dcs;
 
-import io.github.oxnz.Ingrid.dts.CxRecord;
+import io.github.oxnz.Ingrid.tx.CxRecord;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
