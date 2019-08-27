@@ -6,6 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
+import io.github.oxnz.Ingrid.dts.Dispatcher;
+import io.github.oxnz.Ingrid.dts.TestDestSpec;
 import io.github.oxnz.Ingrid.dts.mq.RedisMessageConsumer;
 import io.github.oxnz.Ingrid.dts.mq.RedisMessageProducer;
 import io.github.oxnz.Ingrid.dts.mq.TxEvent;
@@ -27,6 +29,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.stereotype.Service;
 
 @SpringBootApplication
 public class Application {
@@ -123,5 +126,11 @@ public class Application {
         return container;
     }
 
+    @Bean
+    public Dispatcher dispatcher(TestDestSpec testDestSpec) {
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.register(testDestSpec);
+        return dispatcher;
+    }
 
 }

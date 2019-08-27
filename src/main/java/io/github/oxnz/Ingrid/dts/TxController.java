@@ -31,7 +31,7 @@ public class TxController {
 
     @GetMapping("records")
     @Timed
-    public ResponseEntity<List<TxRecord>> index() {
+    public ResponseEntity<List<TxRecord>> records() {
         List<TxRecord> entities = txDataRepo.findAll();
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
@@ -43,7 +43,7 @@ public class TxController {
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping("record")
     @Timed(value = "post")
     public ResponseEntity<TxResponse> post(@RequestBody TxRequest request) {
         TxResponse entity = process(request);
@@ -51,7 +51,7 @@ public class TxController {
     }
 
     private TxResponse process(TxRequest request) {
-        TxRecord record = new TxRecord(request.cat, request.ref);
+        TxRecord record = new TxRecord(request.cat, request.ref, request.state, request.city);
         record = txDataRepo.save(record);
         TxEvent event = new TxEvent(record.getId());
         messageProducer.publish(event);
