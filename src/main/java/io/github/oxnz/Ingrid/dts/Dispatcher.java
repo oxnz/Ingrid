@@ -25,11 +25,11 @@ public class Dispatcher {
     }
 
     private Set<String> dispatchKeys(String state, String city) {
-        Set<String> keys = new HashSet<>();
-        keys.add(dispatchKey(null, null));
-        keys.add(dispatchKey(state, null));
-        keys.add(dispatchKey(state, city));
-        return keys;
+        return Set.of(
+                dispatchKey(null, null),
+                dispatchKey(state, null),
+                dispatchKey(state, city));
+
     }
 
     public void register(DestSpec destSpec) {
