@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.dcs;
+package io.github.oxnz.Ingrid.cx;
 
 public enum CxCategory {
     GUEST,

@@ -1,6 +1,5 @@
-package io.github.oxnz.Ingrid.dcs;
+package io.github.oxnz.Ingrid.cx;
 
-import io.github.oxnz.Ingrid.tx.CxRecord;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +13,9 @@ public abstract class CxService<T> {
         this.metrics = metrics;
     }
 
-    public abstract CxRecord process(T request) throws Exception;
+    public abstract CxRequest process(T request) throws Exception;
 
-    public CxRecord complete(T request) throws CxException {
+    public CxRequest complete(T request) throws CxException {
         boolean succ = true;
         try {
             return process(request);
