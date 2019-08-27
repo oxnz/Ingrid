@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.dts;
+package io.github.oxnz.Ingrid.tx;
 
 public class TxResponse {
     final long id;

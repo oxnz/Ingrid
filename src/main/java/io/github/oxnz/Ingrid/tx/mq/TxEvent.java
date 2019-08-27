@@ -1,4 +1,4 @@
-package io.github.oxnz.Ingrid.dts.mq;
+package io.github.oxnz.Ingrid.tx.mq;
 
 import org.springframework.core.style.ToStringCreator;
 

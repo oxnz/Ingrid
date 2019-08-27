@@ -1,7 +1,7 @@
-package io.github.oxnz.Ingrid.dts.mq;
+package io.github.oxnz.Ingrid.tx.mq;
 
-import io.github.oxnz.Ingrid.dts.TxException;
-import io.github.oxnz.Ingrid.dts.TxService;
+import io.github.oxnz.Ingrid.tx.TxException;
+import io.github.oxnz.Ingrid.tx.TxService;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
