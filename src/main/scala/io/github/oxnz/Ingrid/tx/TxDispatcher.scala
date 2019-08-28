@@ -25,7 +25,8 @@ class TxDispatcher {
     require(clazz.isAnnotationPresent(classOf[Region]), "region annotation is required")
     val region = clazz.getAnnotation(classOf[Region])
     val key = dispatchKey(region.state, region.city)
-    dispatches.update(key, (dispatches.getOrElse(key, mutable.Set()) + destSpec))
+    dispatches.getOrElseUpdate(key, mutable.Set()).add(destSpec)
+//    dispatches.update(key, (dispatches.getOrElse(key, mutable.Set()).add(destSpec)))
   }
 
   def dispatch(record: TxRecord): Set[DestSpec] = {

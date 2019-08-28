@@ -6,9 +6,12 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 
+import scala.beans.BeanProperty
 
-@Entity class TxRecord(var cat: TxCategory, var ref: String, var state: String, var city: String) {
+
+@Entity class TxRecord(@BeanProperty var cat: TxCategory, @BeanProperty var ref: String, @BeanProperty var state: String, @BeanProperty var city: String) {
   @Id
+  @BeanProperty
   @GeneratedValue(strategy = GenerationType.AUTO)  var id = 0L
 
   def this() {
