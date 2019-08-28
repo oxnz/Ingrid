@@ -23,7 +23,6 @@ class TxDispatcher {
     val region = clazz.getAnnotation(classOf[TxRegion])
     val key = dispatchKey(region.state, region.city)
     dispatches.getOrElseUpdate(key, mutable.Set()).add(destSpec)
-//    dispatches.update(key, (dispatches.getOrElse(key, mutable.Set()).add(destSpec)))
   }
 
   def dispatch(record: TxRecord): Set[TxDestSpec] = {
