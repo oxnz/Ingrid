@@ -5,6 +5,10 @@ management.endpoints.web.exposure.exclude: beans
 
 logging.level.io.github.oxnz.Ingrid: DEBUG
 
+spring:
+  thymeleaf:
+    cache: false
+
 tx.http.executor:
   timeoutMillis: 1000
   maxConn: 200
