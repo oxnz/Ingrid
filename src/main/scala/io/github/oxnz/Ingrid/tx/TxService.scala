@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service
       // cxRecord cxRecord = cxService.complete(record.getId());
       // record.data = cxRecord.toString();
       // txRecordRepo.save(record);
-      val destSpecs: Set[DestSpec] = dispatcher.dispatch(record)
+      val destSpecs: Set[TxDestSpec] = dispatcher.dispatch(record)
       destSpecs.map(post(record, _))
     } catch {
       case e: Exception =>
@@ -28,14 +28,14 @@ import org.springframework.stereotype.Service
     }
   }
 
-  private def post(record: TxRecord, destSpec: DestSpec): Unit = {
+  private def post(record: TxRecord, destSpec: TxDestSpec): Unit = {
     val httpExecResult: TxHttpExecResult = doPost(record, destSpec)
     val txResult: TxResult = new TxResult(record, httpExecResult.succeeded, httpExecResult.message)
     txResultRepo.save(txResult)
     log.debug("result: {}", txResult)
   }
 
-  private def doPost(record: TxRecord, destSpec: DestSpec): TxHttpExecResult = {
+  private def doPost(record: TxRecord, destSpec: TxDestSpec): TxHttpExecResult = {
     val request: HttpPost = destSpec.requestBuilder.buildRequest(record, destSpec)
     try
       httpExecutionService.execute(request, null, destSpec.responseHandler)
