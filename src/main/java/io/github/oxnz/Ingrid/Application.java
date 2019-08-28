@@ -6,6 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
+import io.github.oxnz.Ingrid.cx.CheckinDataCompExecutor;
+import io.github.oxnz.Ingrid.cx.CxService;
 import io.github.oxnz.Ingrid.tx.*;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -131,6 +133,14 @@ public class Application {
     @Bean
     TxHttpExecutorConfig txHttpExecutorConfig() {
         return new TxHttpExecutorConfig(10*1000, 200, 8, 30*1000, 8);
+    }
+
+    @Bean
+    CxService cxService(MeterRegistry metrics,
+            CheckinDataCompExecutor checkinDataCompExecutor) {
+        CxService cxService = new CxService(metrics);
+        cxService.register(checkinDataCompExecutor);
+        return cxService;
     }
 
 }

@@ -8,15 +8,22 @@ import javax.persistence.Id
 
 import scala.beans.BeanProperty
 
-
-@Entity class TxRecord(@BeanProperty var cat: TxCategory, @BeanProperty var ref: String, @BeanProperty var state: String, @BeanProperty var city: String) {
+@Entity class TxRecord(@BeanProperty var cat: TxCategory, @BeanProperty var ref: String, @BeanProperty var state: String, @BeanProperty var city: String, @BeanProperty var status: TxStatus = TxStatus.CREATED, @BeanProperty var info: String = "new") {
   @Id
   @BeanProperty
   @GeneratedValue(strategy = GenerationType.AUTO)  var id = 0L
+  @BeanProperty var data: String = _
 
   def this() {
     this(null, null, null, null)
   }
 
-  override def toString: String = new ToStringCreator(this).append("id", id).append("cat", cat).append("ref", ref).append("state", state).append("city", city).toString
+  override def toString: String = new ToStringCreator(this)
+    .append("id", id)
+    .append("cat", cat)
+    .append("ref", ref)
+    .append("state", state)
+    .append("city", city)
+    .append("status", status)
+    .toString
 }
