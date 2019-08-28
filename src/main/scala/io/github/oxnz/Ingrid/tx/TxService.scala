@@ -30,20 +30,20 @@ import org.springframework.stereotype.Service
   }
 
   private def post(record: TxRecord, destSpec: DestSpec): Unit = {
-    val httpExecResult: HttpExecutionResult = doPost(record, destSpec)
+    val httpExecResult: TxHttpExecResult = doPost(record, destSpec)
     val txResult: TxResult = new TxResult(record, httpExecResult.succeeded, httpExecResult.message)
     txResultRepo.save(txResult)
     log.debug("result: {}", txResult)
   }
 
-  private def doPost(record: TxRecord, destSpec: DestSpec): HttpExecutionResult = {
+  private def doPost(record: TxRecord, destSpec: DestSpec): TxHttpExecResult = {
     val request: HttpPost = destSpec.requestBuilder.buildRequest(record, destSpec)
     try
       httpExecutionService.execute(request, null, destSpec.responseHandler)
     catch {
       case e@(_: InterruptedException | _: ExecutionException) =>
         log.error("post", e)
-        new HttpExecutionResult(false, e.getMessage)
+        new TxHttpExecResult(false, e.getMessage)
     }
   }
 
