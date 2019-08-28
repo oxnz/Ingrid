@@ -1,9 +1,6 @@
 package io.github.oxnz.Ingrid.tx
 
-import java.util.Objects
-
 import org.slf4j.LoggerFactory
-import org.springframework.util.Assert
 
 import scala.collection.mutable
 

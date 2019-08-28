@@ -6,10 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.fasterxml.jackson.module.scala.DefaultScalaModule;
 import io.github.oxnz.Ingrid.article.Article;
-import io.github.oxnz.Ingrid.tx.TestDestSpec;
-import io.github.oxnz.Ingrid.tx.TxDispatcher;
-import io.github.oxnz.Ingrid.tx.TxEvent;
-import io.github.oxnz.Ingrid.tx.TxEventConsumer;
+import io.github.oxnz.Ingrid.tx.*;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.NamingConvention;
@@ -129,6 +126,11 @@ public class Application {
         TxDispatcher txDispatcher = new TxDispatcher();
         txDispatcher.register(testDestSpec);
         return txDispatcher;
+    }
+
+    @Bean
+    TxHttpExecutorConfig txHttpExecutorConfig() {
+        return new TxHttpExecutorConfig(10*1000, 200, 8, 30*1000, 8);
     }
 
 }
