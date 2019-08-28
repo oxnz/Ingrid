@@ -1,6 +1,6 @@
 package io.github.oxnz.Ingrid.tx
 
-import java.util
+import java.{lang, util}
 
 import io.github.oxnz.Ingrid.tx.mq.RedisMessageProducer
 import io.micrometer.core.annotation.Timed
@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.{GetMapping, PostMapping, Request
   }
 
   @GetMapping(Array("records")) def txRecords(model: Model): String = {
-    val records: util.List[TxRecord] = txRecordRepo.findAll
+    val records: lang.Iterable[TxRecord] = txRecordRepo.findAll
     model.addAttribute("records", records)
     "admin/tx/records"
   }
 
   @GetMapping(Array("results")) def txResults(model: Model): String = {
-    val results: util.List[TxResult] = txResultRepo.findAll
+    val results: lang.Iterable[TxResult] = txResultRepo.findAll
     model.addAttribute("results", results)
     "admin/tx/results"
   }

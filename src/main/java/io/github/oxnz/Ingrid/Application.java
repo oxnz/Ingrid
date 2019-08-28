@@ -9,7 +9,7 @@ import io.github.oxnz.Ingrid.article.Article;
 import io.github.oxnz.Ingrid.tx.TestDestSpec;
 import io.github.oxnz.Ingrid.tx.TxDispatcher;
 import io.github.oxnz.Ingrid.tx.TxEvent;
-import io.github.oxnz.Ingrid.tx.mq.RedisMessageConsumer;
+import io.github.oxnz.Ingrid.tx.TxEventConsumer;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.NamingConvention;
@@ -109,8 +109,8 @@ public class Application {
     }
 
     @Bean
-    public MessageListenerAdapter messageListenerAdapter(RedisMessageConsumer redisMessageConsumer) {
-        return new MessageListenerAdapter(redisMessageConsumer);
+    public MessageListenerAdapter messageListenerAdapter(TxEventConsumer txEventConsumer) {
+        return new MessageListenerAdapter(txEventConsumer);
     }
 
     @Bean

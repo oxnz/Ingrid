@@ -4,9 +4,14 @@ import javax.persistence.Entity
 import org.springframework.core.style.ToStringCreator
 import javax.persistence._
 
-@Entity class TxResult(_record: TxRecord, var succ : Boolean, var msg : String) {
+import scala.beans.BeanProperty
+
+
+@Entity class TxResult(_record: TxRecord, @BeanProperty var succ : Boolean, @BeanProperty var msg : String) {
   @Id
+  @BeanProperty
   @GeneratedValue(strategy = GenerationType.AUTO)  val id = 0L
+  @BeanProperty
   @ManyToOne(cascade = Array(CascadeType.DETACH))
   @JoinColumn(name = "record_id")  var record : TxRecord = _record
 

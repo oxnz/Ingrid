@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 trait TxRecordRepo extends CrudRepository[TxRecord, Long] {
-  override def findAll: List[TxRecord]
 }
