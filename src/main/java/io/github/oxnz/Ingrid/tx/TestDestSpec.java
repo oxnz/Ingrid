@@ -16,8 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 @Component
-@Region(state = "CA", city = "SF")
-public class TestDestSpec implements DestSpec {
+@TxRegion(state = "CA", city = "SF")
+public class TestDestSpec implements TxDestSpec {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final URI CHECKIN_URI = URI.create("http://localhost:8000/echo");
@@ -44,7 +44,7 @@ public class TestDestSpec implements DestSpec {
 
     @Override
     public TxHttpReqBuilder requestBuilder() {
-        return (record, destSpec) -> {
+        return (record, txDestSpec) -> {
             HttpPost request = new HttpPost(CHECKIN_URI);
             try {
                 HttpEntity entity = new StringEntity(record.toString());
