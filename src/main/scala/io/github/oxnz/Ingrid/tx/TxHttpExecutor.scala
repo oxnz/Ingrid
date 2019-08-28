@@ -5,6 +5,7 @@ import java.security.{KeyManagementException, KeyStoreException, NoSuchAlgorithm
 import java.util.concurrent.{ExecutionException, Executors}
 import java.util.concurrent.atomic.AtomicBoolean
 
+import javax.annotation.PreDestroy
 import javax.net.ssl.HostnameVerifier
 import org.apache.http.HttpResponse
 import org.apache.http.client.ResponseHandler
