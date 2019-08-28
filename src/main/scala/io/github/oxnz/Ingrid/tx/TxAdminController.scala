@@ -1,8 +1,7 @@
 package io.github.oxnz.Ingrid.tx
 
-import java.{lang, util}
+import java.lang
 
-import io.github.oxnz.Ingrid.tx.mq.RedisMessageProducer
 import io.micrometer.core.annotation.Timed
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.stereotype.Controller
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.{GetMapping, PostMapping, Request
 
 @Timed
 @Controller
-@RequestMapping(Array("admin/tx")) class TxAdminController(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val messageProducer: RedisMessageProducer) {
+@RequestMapping(Array("admin/tx")) class TxAdminController(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val messageProducer: TxEventProducer) {
   final private val log: Logger = LoggerFactory.getLogger(getClass)
 
   @GetMapping(Array("")) def index: String = "admin/tx/index"

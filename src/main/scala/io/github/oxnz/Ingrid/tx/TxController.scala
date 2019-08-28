@@ -1,17 +1,14 @@
 package io.github.oxnz.Ingrid.tx
 
-import java.util
-
-import io.github.oxnz.Ingrid.tx.mq.RedisMessageProducer
-
-import scala.jdk.CollectionConverters._
 import io.micrometer.core.annotation.Timed
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.http.{HttpStatus, ResponseEntity}
-import org.springframework.web.bind.annotation.{GetMapping, PostMapping, RequestBody, RequestMapping, RestController}
+import org.springframework.web.bind.annotation._
+
+import scala.jdk.CollectionConverters._
 
 @RestController
-@RequestMapping(Array("tx")) class TxController(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val messageProducer: RedisMessageProducer) {
+@RequestMapping(Array("tx")) class TxController(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val messageProducer: TxEventProducer) {
   final private val log: Logger = LoggerFactory.getLogger(getClass)
 
   @GetMapping(Array("records"))
