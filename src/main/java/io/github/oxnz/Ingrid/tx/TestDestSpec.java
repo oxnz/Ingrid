@@ -28,8 +28,8 @@ public class TestDestSpec implements DestSpec {
     }
 
     @Override
-    public ResponseHandler<? extends HttpExecutionResult> responseHandler() {
-        return (ResponseHandler<HttpExecutionResult>) response -> {
+    public ResponseHandler<? extends TxHttpExecResult> responseHandler() {
+        return (ResponseHandler<TxHttpExecResult>) response -> {
             log.debug("resp: {}", response);
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
@@ -38,12 +38,12 @@ public class TestDestSpec implements DestSpec {
             HttpEntity entity = response.getEntity();
             if (entity == null)
                 throw new RuntimeException("no entity");
-            return new HttpExecutionResult(true, "succ");
+            return new TxHttpExecResult(true, "succ");
         };
     }
 
     @Override
-    public TxRequestBuilder requestBuilder() {
+    public TxHttpReqBuilder requestBuilder() {
         return (record, destSpec) -> {
             HttpPost request = new HttpPost(CHECKIN_URI);
             try {
