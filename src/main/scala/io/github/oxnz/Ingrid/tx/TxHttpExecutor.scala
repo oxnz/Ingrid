@@ -25,15 +25,15 @@ import org.springframework.stereotype.Service
     val sslcontext = SSLContextBuilder.create.loadTrustMaterial(trustStrategy).build
     val sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslcontext, hostnameVerifier)
     val requestConfig = RequestConfig.custom
-      .setConnectTimeout(config.timeoutMS)
-      .setConnectionRequestTimeout(config.timeoutMS)
-      .setSocketTimeout(config.timeoutMS)
+      .setConnectTimeout(config.timeoutMillis)
+      .setConnectionRequestTimeout(config.timeoutMillis)
+      .setSocketTimeout(config.timeoutMillis)
       .build
     val httpClient = HttpClients.custom
       .setDefaultRequestConfig(requestConfig)
       .setMaxConnTotal(config.maxConn)
       .setMaxConnPerRoute(config.maxConnPerRoute)
-      .setKeepAliveStrategy((response: HttpResponse, context: HttpContext) => config.keepAliveMS)
+      .setKeepAliveStrategy((response: HttpResponse, context: HttpContext) => config.keepAliveTimeoutMillis)
       .setSSLSocketFactory(sslConnectionSocketFactory)
       .build
     val executor = Executors.newFixedThreadPool(config.workerCount)

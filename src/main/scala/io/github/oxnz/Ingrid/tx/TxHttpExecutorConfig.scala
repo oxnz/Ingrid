@@ -7,12 +7,11 @@ import scala.beans.BeanProperty
 
 @Component
 @ConfigurationProperties(prefix = "tx.http.executor")
-class TxHttpExecutorConfig(@BeanProperty var timeoutMS: Int, @BeanProperty var maxConn: Int, @BeanProperty var maxConnPerRoute: Int, @BeanProperty var keepAliveMS: Int, @BeanProperty var workerCount: Int) {
+class TxHttpExecutorConfig(@BeanProperty var timeoutMillis: Int, @BeanProperty var maxConn: Int, @BeanProperty var maxConnPerRoute: Int, @BeanProperty var keepAliveTimeoutMillis: Int, @BeanProperty var workerCount: Int) {
   require(workerCount <= maxConn, "extra worker would block by insufficient conn")
-
   def this() = {
-    this(1 * 1000, 8 * 8, 8, 30 * 1000, 8)
+    this(10*1000, 8 * 8, 8, 30*1000, 8)
   }
 
-  override def toString = s"TxHttpExecutorConfig(timeoutMS=$timeoutMS, maxConn=$maxConn, maxConnPerRoute=$maxConnPerRoute, keepAliveMS=$keepAliveMS, workerCount=$workerCount)"
+  override def toString = s"TxHttpExecutorConfig(timeoutMS=$timeoutMillis, maxConn=$maxConn, maxConnPerRoute=$maxConnPerRoute, keepAliveMS=$keepAliveTimeoutMillis, workerCount=$workerCount)"
 }

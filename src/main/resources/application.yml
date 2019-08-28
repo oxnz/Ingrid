@@ -6,8 +6,8 @@ management.endpoints.web.exposure.exclude: beans
 logging.level.io.github.oxnz.Ingrid: DEBUG
 
 tx.http.executor:
-  timeoutMS: 1000
+  timeoutMillis: 1000
   maxConn: 200
   maxConnPerRoute: 8
-  keepAliveMS: 30000
+  keepAliveTimeoutMillis: 30000
   workerCount: 8
