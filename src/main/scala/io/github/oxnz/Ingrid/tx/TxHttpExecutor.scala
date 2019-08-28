@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service class TxHttpExecutor(val config: TxHttpExecutorConfig, val trustStrategy: TrustStrategy, val hostnameVerifier: HostnameVerifier) extends AutoCloseable {
+  final private val closed = new AtomicBoolean(false)
+  final private var executionService: FutureRequestExecutionService = _
   try {
     val sslcontext = SSLContextBuilder.create.loadTrustMaterial(trustStrategy).build
     val sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslcontext, hostnameVerifier)
@@ -34,13 +36,11 @@ import org.springframework.stereotype.Service
       .setSSLSocketFactory(sslConnectionSocketFactory)
       .build
     val executor = Executors.newFixedThreadPool(config.workerCount)
-    val executionService = new FutureRequestExecutionService(httpClient, executor)
+    executionService = new FutureRequestExecutionService(httpClient, executor)
   } catch {
     case e@(_: NoSuchAlgorithmException | _: KeyStoreException | _: KeyManagementException) =>
       throw new RuntimeException(e)
   }
-  final private val closed = new AtomicBoolean(false)
-  final private var executionService: FutureRequestExecutionService = _
 
   @Autowired
   def this(config: TxHttpExecutorConfig) {
