@@ -77,8 +77,6 @@ object Application {
     txDispatcher
   }
 
-  @Bean private[Ingrid] def txHttpExecutorConfig = new TxHttpExecutorConfig(10 * 1000, 200, 8, 30 * 1000, 8)
-
   @Bean private[Ingrid] def cxService(metrics: MeterRegistry, checkinDataCompExecutor: CheckinDataCompExecutor) = {
     val cxService = new CxService(metrics)
     cxService.register(checkinDataCompExecutor)

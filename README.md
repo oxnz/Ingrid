@@ -10,4 +10,5 @@ curl -XPOST -H "Content-Type: application/json" \
     localhost:8080/tx/record
 curl localhost:8080/records
 curl localhost:8080/results
+curl -XPOST localhost:8080/actuator/shutdown
 ```
