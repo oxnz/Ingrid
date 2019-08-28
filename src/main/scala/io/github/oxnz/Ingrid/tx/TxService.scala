@@ -8,7 +8,7 @@ import org.apache.http.client.methods.HttpPost
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.stereotype.Service
 
-@Service class TxService(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val dispatcher: TxDispatcher, val httpExecutionService: HttpExecutionService) extends AutoCloseable {
+@Service class TxService(val txRecordRepo: TxRecordRepo, val txResultRepo: TxResultRepo, val dispatcher: TxDispatcher, val txHttpExecutor: TxHttpExecutor) extends AutoCloseable {
   final private[tx] val log: Logger = LoggerFactory.getLogger(getClass)
 
   @throws[TxException]
@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service
   private def doPost(record: TxRecord, destSpec: TxDestSpec): TxHttpExecResult = {
     val request: HttpPost = destSpec.requestBuilder.buildRequest(record, destSpec)
     try
-      httpExecutionService.execute(request, null, destSpec.responseHandler)
+      txHttpExecutor.execute(request, null, destSpec.responseHandler)
     catch {
       case e@(_: InterruptedException | _: ExecutionException) =>
         log.error("post", e)
@@ -48,6 +48,6 @@ import org.springframework.stereotype.Service
 
   @throws[IOException]
   override def close(): Unit = {
-    httpExecutionService.close()
+    txHttpExecutor.close()
   }
 }
