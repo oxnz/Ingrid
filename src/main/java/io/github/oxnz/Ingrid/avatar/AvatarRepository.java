@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface AvatarRepository extends CrudRepository<Avatar, Long> {
-    public List<Avatar> findBySize(int size);
+    List<Avatar> findBySize(int size);
 }

@@ -6,7 +6,8 @@ import scala.collection.mutable
 
 class TxDispatcher {
   final private val log = LoggerFactory.getLogger(getClass)
-  final private val dispatches: mutable.Map[String, mutable.Set[TxDestSpec]] = mutable.Map()
+
+  final private val dispatches = mutable.Map.empty[String, mutable.Set[TxDestSpec]]
 
   private def dispatchKey(state: String, city: String) = {
     require(state != null, "state should no be null")
