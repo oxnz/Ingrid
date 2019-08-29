@@ -17,6 +17,10 @@ repositories {
 
 configurations {
     compile.exclude module: 'spring-boot-starter-tomcat'
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
 }
 
 dependencies {
@@ -36,6 +40,7 @@ dependencies {
     implementation 'com.h2database:h2'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.13', version: '2.9.9'
 
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.0.0'
