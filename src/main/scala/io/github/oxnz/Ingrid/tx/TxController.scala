@@ -17,11 +17,9 @@ import scala.jdk.CollectionConverters._
     new ResponseEntity[List[TxRecord]](entities, HttpStatus.OK)
   }
 
-
   @GetMapping(Array("results"))
-  @Timed def txResults: ResponseEntity[List[TxResult]] = {
-    val entities: List[TxResult] = txResultRepo.findAll.asScala.toList
-    new ResponseEntity[List[TxResult]](entities, HttpStatus.OK)
+  @Timed def txResults: List[TxResult] = {
+    txResultRepo.findAll.asScala.toList
   }
 
   @PostMapping(Array("record"))

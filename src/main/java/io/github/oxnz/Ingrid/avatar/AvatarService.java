@@ -1,6 +1,5 @@
 package io.github.oxnz.Ingrid.avatar;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,8 +9,11 @@ import java.util.Optional;
 @Service
 public class AvatarService {
 
-    @Autowired
-    private AvatarRepository avatarRepository;
+    private final AvatarRepository avatarRepository;
+
+    public AvatarService(AvatarRepository avatarRepository) {
+        this.avatarRepository = avatarRepository;
+    }
 
     public Avatar save(Avatar avatar) {
         return avatarRepository.save(avatar);
@@ -28,7 +30,7 @@ public class AvatarService {
         return avatars;
     }
 
-    public Optional<Avatar> find(long id) {
+    Optional<Avatar> find(long id) {
         return avatarRepository.findById(id);
     }
 }

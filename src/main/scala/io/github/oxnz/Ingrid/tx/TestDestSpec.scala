@@ -31,20 +31,17 @@ import org.springframework.stereotype.Component
   }
 
   override def requestBuilder: TxHttpReqBuilder = (record: TxRecord, txDestSpec: TxDestSpec) => {
-    def foo(record: TxRecord, txDestSpec: TxDestSpec) = {
-      val request = new HttpPost(CHECKIN_URI)
-      try {
-        val entity = new StringEntity(record.toString)
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
-        request.setEntity(entity)
-        log.debug("req: {}, entity: {}", request, entity)
-        request
-      } catch {
-        case e: UnsupportedEncodingException =>
-          throw new RuntimeException(e)
-      }
+    val request = new HttpPost(CHECKIN_URI)
+    try {
+      val entity = new StringEntity(record.toString)
+      request.addHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
+      request.setEntity(entity)
+      log.debug("req: {}, entity: {}", request, entity)
+      request
+    } catch {
+      case e: UnsupportedEncodingException =>
+        throw new RuntimeException(e)
     }
-
-    foo(record, txDestSpec)
   }
+
 }
