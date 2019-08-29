@@ -12,9 +12,8 @@ import scala.jdk.CollectionConverters._
   final private val log: Logger = LoggerFactory.getLogger(getClass)
 
   @GetMapping(Array("records"))
-  @Timed def records: ResponseEntity[List[TxRecord]] = {
-    val entities: List[TxRecord] = txRecordRepo.findAll.asScala.toList
-    new ResponseEntity[List[TxRecord]](entities, HttpStatus.OK)
+  @Timed def records: List[TxRecord] = {
+    txRecordRepo.findAll.asScala.toList
   }
 
   @GetMapping(Array("results"))

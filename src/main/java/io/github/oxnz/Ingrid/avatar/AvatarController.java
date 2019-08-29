@@ -24,9 +24,8 @@ public class AvatarController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Avatar> get(@PathVariable long id) {
-        Avatar avatar = avatarService.find(id).orElse(null);
-        return new ResponseEntity<>(avatar, HttpStatus.OK);
+    public Avatar get(@PathVariable long id) {
+        return avatarService.find(id).orElse(null);
     }
 
     @PostMapping("/{id}")
