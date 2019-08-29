@@ -34,6 +34,6 @@ class TxDispatcher {
   private def dispatch(state: String, city: String, cat: TxCategory): Set[TxDestSpec] = {
     require(cat != null, "category should not be null")
     val keys = dispatchKeys(state, city)
-    keys.map(dispatches.get(_)).filter(!_.isEmpty).flatten.flatten
+    keys.map(dispatches.get).filter(_.isDefined).flatten.flatten
   }
 }

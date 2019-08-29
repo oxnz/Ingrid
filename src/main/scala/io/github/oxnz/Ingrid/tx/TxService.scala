@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service
       record.data = cxResponse.data
       txRecordRepo.save(record)
       val destSpecs: Set[TxDestSpec] = dispatcher.dispatch(record)
-      destSpecs.map(post(record, _))
+      destSpecs.foreach(post(record, _))
       record.status = TxStatus.SENT
     } catch {
       case e: Exception =>
