@@ -6,7 +6,7 @@ import java.net.URI
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.{ClientProtocolException, ResponseHandler}
 import org.apache.http.entity.StringEntity
-import org.apache.http.{HttpHeaders, HttpResponse, HttpStatus, StatusLine}
+import org.apache.http.{HttpEntity, HttpHeaders, HttpResponse, HttpStatus, StatusLine}
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -17,15 +17,9 @@ import org.springframework.stereotype.Component
 
   override def isInterested(cat: TxCategory) = true
 
-  override def responseHandler: ResponseHandler[_ <: TxHttpExecResult] = {
-    response: HttpResponse => {
-      log.debug("resp: {}", response)
-      val statusLine: StatusLine = response.getStatusLine
-      val statusCode = statusLine.getStatusCode
-      if (statusCode != HttpStatus.SC_OK)
-        throw new ClientProtocolException("unexpected status code: " + statusCode)
-      val entity = response.getEntity
-      if (entity == null) throw new RuntimeException("no entity")
+  override def responseHandler: TxHttpRespHandler = {
+    entity: HttpEntity => {
+      log.debug("entity: {}", entity)
       new TxHttpExecResult(true, "success")
     }
   }
