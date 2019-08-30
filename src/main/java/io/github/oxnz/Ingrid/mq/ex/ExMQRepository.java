@@ -2,13 +2,14 @@ package io.github.oxnz.Ingrid.mq.ex;
 
 import io.github.oxnz.Ingrid.mq.MQMessage;
 import io.github.oxnz.Ingrid.mq.MQRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class ExMQRepository implements MQRepository<ExRecord> {
     private final AtomicLong snCounter = new AtomicLong(1);
     private final Semaphore msgAvaliable = new Semaphore(0);
