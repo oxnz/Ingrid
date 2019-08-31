@@ -16,7 +16,9 @@ class CxService(private final val metrics: MeterRegistry) {
     require(clazz.isAnnotationPresent(classOf[CxCategory]), "region annotation is required")
     val cat = clazz.getAnnotation(classOf[CxCategory]).cat()
     require(!completors.contains(cat), "category already registered: " + cat)
-    completors.update(cat, executor)
+    synchronized(this) {
+      completors.update(cat, executor)
+    }
   }
 
   def process(request: CxRequest): CxResponse = {
@@ -40,7 +42,9 @@ class CxService(private final val metrics: MeterRegistry) {
   }
 
   private def dispatch(request: CxRequest): CxExecutor = {
-    completors.apply(request.cat)
+    synchronized(this) {
+      completors.apply(request.cat)
+    }
   }
 
   private object MetricsNames {
