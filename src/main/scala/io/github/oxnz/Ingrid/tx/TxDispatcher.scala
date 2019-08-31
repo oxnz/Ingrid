@@ -37,4 +37,6 @@ class TxDispatcher {
     val keys = dispatchKeys(state, city)
     keys.map(dispatches.get).filter(_.isDefined).flatten.flatten
   }
+
+  override def toString = s"TxDispatcher(map=$dispatches)"
 }

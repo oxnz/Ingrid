@@ -17,4 +17,7 @@ class TxEventProducer(val redisTemplate: RedisTemplate[Long, TxEvent], val chann
     log.debug("closing ...")
     log.debug("closed")
   }
+
+
+  override def toString = s"TxEventProducer(channelTopic=$channelTopic)"
 }

@@ -5,4 +5,6 @@ class TxRequest(val ref: String, val cat: TxCategory, val state: String, val cit
   require(cat != null, "cat is required")
   require(state != null, "state is required")
   require(city != null, "city is required")
+
+  override def toString = s"TxRequest(ref=$ref, cat=$cat, state=$state, city=$city)"
 }
