@@ -42,9 +42,9 @@ import org.springframework.stereotype.Service
   }
 
   private def doPost(record: TxRecord, destSpec: TxDestSpec): TxHttpExecResult = {
-    val request: HttpPost = destSpec.requestBuilder.buildRequest(record, destSpec)
+    val request = destSpec.requestBuilder.buildRequest(record, destSpec)
     try
-      txHttpExecutor.execute(request, null, destSpec.responseHandler)
+      txHttpExecutor.execute(request, destSpec.httpContext, destSpec.responseHandler)
     catch {
       case e@(_: InterruptedException | _: ExecutionException) =>
         log.error("post", e)

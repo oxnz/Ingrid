@@ -4,9 +4,9 @@ import java.io.UnsupportedEncodingException
 import java.net.URI
 
 import org.apache.http.client.methods.HttpPost
-import org.apache.http.client.{ClientProtocolException, ResponseHandler}
 import org.apache.http.entity.StringEntity
-import org.apache.http.{HttpEntity, HttpHeaders, HttpResponse, HttpStatus, StatusLine}
+import org.apache.http.protocol.HttpContext
+import org.apache.http.{HttpEntity, HttpHeaders}
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -15,16 +15,16 @@ import org.springframework.stereotype.Component
   final private val log = LoggerFactory.getLogger(getClass)
   final private val CHECKIN_URI = URI.create("http://localhost:8000/echo")
 
-  override def isInterested(cat: TxCategory) = true
+  override val intestedCats: Set[TxCategory] = Set(TxCategory.CHECKIN)
 
-  override def responseHandler: TxHttpRespHandler = {
+  override val responseHandler: TxHttpRespHandler = {
     entity: HttpEntity => {
       log.debug("entity: {}", entity)
       new TxHttpExecResult(true, "success")
     }
   }
 
-  override def requestBuilder: TxHttpReqBuilder = (record: TxRecord, txDestSpec: TxDestSpec) => {
+  override val requestBuilder: TxHttpReqBuilder = (record: TxRecord, txDestSpec: TxDestSpec) => {
     val request = new HttpPost(CHECKIN_URI)
     try {
       val entity = new StringEntity(record.toString)
@@ -38,4 +38,5 @@ import org.springframework.stereotype.Component
     }
   }
 
+  override val httpContext: HttpContext = null
 }
