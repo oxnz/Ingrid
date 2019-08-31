@@ -5,5 +5,6 @@ import java.io.Serializable
 
 class TxEvent(val id: Long) extends Serializable {
 
-  override def toString: String = new ToStringCreator(this).append("id", id).toString
+
+  override def toString = s"TxEvent(id=$id)"
 }

@@ -18,12 +18,6 @@ import scala.beans.BeanProperty
     this(null, null, null, null)
   }
 
-  override def toString: String = new ToStringCreator(this)
-    .append("id", id)
-    .append("cat", cat)
-    .append("ref", ref)
-    .append("state", state)
-    .append("city", city)
-    .append("status", status)
-    .toString
+
+  override def toString = s"TxRecord(id=$id, data=$data, cat=$cat, ref=$ref, state=$state, city=$city, status=$status, info=$info)"
 }
