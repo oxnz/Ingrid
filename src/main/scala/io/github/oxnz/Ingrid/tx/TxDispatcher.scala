@@ -23,7 +23,7 @@ class TxDispatcher {
     require(clazz.isAnnotationPresent(classOf[TxRegion]), "region annotation is required")
     val region = clazz.getAnnotation(classOf[TxRegion])
     val key = dispatchKey(region.state, region.city)
-    synchronized(this) {
+    synchronized {
       dispatches.getOrElseUpdate(key, mutable.Set()).add(destSpec)
     }
   }
@@ -37,8 +37,9 @@ class TxDispatcher {
   private def dispatch(state: String, city: String, cat: TxCategory): Set[TxDestSpec] = {
     require(cat != null, "category should not be null")
     val keys = dispatchKeys(state, city)
-    synchronized(this) {
-      keys.map(dispatches.get).filter(_.isDefined).flatten.flatten
+    synchronized {
+      keys.map(dispatches.get).filter(_.isDefined).flatten
+        .flatten.filter(_.intestedCats.contains(cat))
     }
   }
 
