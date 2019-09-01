@@ -6,20 +6,23 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import io.github.oxnz.Ingrid.article.Article
-import io.github.oxnz.Ingrid.cx.{CheckinDataCompExecutor, CxService}
+import io.github.oxnz.Ingrid.cx.{CheckinDataCompExecutor, CxExecutor, CxService}
 import io.github.oxnz.Ingrid.tx._
-import io.micrometer.core.instrument.{Meter, MeterRegistry}
 import io.micrometer.core.instrument.config.NamingConvention
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
+import io.micrometer.core.instrument.{Meter, MeterRegistry}
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
-import org.springframework.data.redis.connection.{RedisConnectionFactory, RedisStandaloneConfiguration}
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.connection.{RedisConnectionFactory, RedisStandaloneConfiguration}
 import org.springframework.data.redis.core.{RedisTemplate, StringRedisTemplate}
-import org.springframework.data.redis.listener.{ChannelTopic, RedisMessageListenerContainer}
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter
+import org.springframework.data.redis.listener.{ChannelTopic, RedisMessageListenerContainer}
+
+import scala.jdk.CollectionConverters._
+
 
 object Application {
   private val log = LoggerFactory.getLogger(classOf[Application])
@@ -71,15 +74,11 @@ object Application {
     container
   }
 
-  @Bean def txDispatcher(testDestSpec: TestDestSpec): TxDispatcher = {
-    val txDispatcher = new TxDispatcher
-    txDispatcher.register(testDestSpec)
-    txDispatcher
+  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
+    new TxDispatcher(destSpecs.asScala.toList)
   }
 
-  @Bean private[Ingrid] def cxService(metrics: MeterRegistry, checkinDataCompExecutor: CheckinDataCompExecutor) = {
-    val cxService = new CxService(metrics)
-    cxService.register(checkinDataCompExecutor)
-    cxService
+  @Bean private[Ingrid] def cxService(metrics: MeterRegistry, executors: java.util.List[CxExecutor]) = {
+    new CxService(metrics, executors.asScala.toList)
   }
 }

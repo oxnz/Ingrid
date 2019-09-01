@@ -4,21 +4,17 @@ import io.github.oxnz.Ingrid.tx.TxCategory
 import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.collection.mutable
-
-class CxService(private final val metrics: MeterRegistry) {
+class CxService(private final val metrics: MeterRegistry, executors: List[CxExecutor]) {
   final private[cx] val log: Logger = LoggerFactory.getLogger(getClass)
-  private final val completors: mutable.Map[TxCategory, CxExecutor] = mutable.Map()
+  require(executors.nonEmpty, "executors should not be empty")
+  private final val completors: Map[TxCategory, CxExecutor] =
+    executors.groupBy(dispatchKey).map { case (k, v) => (k, v.head) }
 
-  def register(executor: CxExecutor): Unit = {
+  private def dispatchKey(executor: CxExecutor): TxCategory = {
     require(executor != null, "executor should not be null")
     val clazz = executor.getClass
     require(clazz.isAnnotationPresent(classOf[CxCategory]), "region annotation is required")
-    val cat = clazz.getAnnotation(classOf[CxCategory]).cat()
-    require(!completors.contains(cat), "category already registered: " + cat)
-    synchronized {
-      completors.update(cat, executor)
-    }
+    clazz.getAnnotation(classOf[CxCategory]).cat()
   }
 
   def process(request: CxRequest): CxResponse = {
