@@ -5,7 +5,7 @@ import javax.persistence.{Entity, _}
 import scala.beans.BeanProperty
 
 
-@Entity class TxResult(_record: TxRecord, @BeanProperty var succ : Boolean, @BeanProperty var msg : String) {
+@Entity class TxResult(_record: TxRecord, @BeanProperty var succ: Boolean, @BeanProperty var msg: String) {
   @Id
   @BeanProperty
   @GeneratedValue(strategy = GenerationType.AUTO) val id = 0L
