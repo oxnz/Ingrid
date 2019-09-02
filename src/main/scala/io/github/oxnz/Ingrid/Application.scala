@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import io.github.oxnz.Ingrid.article.Article
-import io.github.oxnz.Ingrid.cx.{CheckinDataCompExecutor, CxExecutor, CxService}
+import io.github.oxnz.Ingrid.cx.{CxExecutor, CxService}
 import io.github.oxnz.Ingrid.tx._
 import io.micrometer.core.instrument.config.NamingConvention
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
@@ -35,6 +35,23 @@ object Application {
 }
 
 @SpringBootApplication class Application {
+  @Bean def objectMapper: ObjectMapper = new ObjectMapper().registerModule(new DefaultScalaModule).registerModule(new ParameterNamesModule).registerModule(new Jdk8Module).registerModule(new JavaTimeModule) // new module, NOT JSR310Module
+
+  @Bean def redisConnectionFactory = new LettuceConnectionFactory(new RedisStandaloneConfiguration("localhost", 6379))
+
+  @Bean def messageListenerAdapter(txEventConsumer: TxEventConsumer) = new MessageListenerAdapter(txEventConsumer)
+
+  @Bean def redisMessageListenerContainer(redisConnectionFactory: RedisConnectionFactory, messageListenerAdapter: MessageListenerAdapter, channelTopic: ChannelTopic): RedisMessageListenerContainer = {
+    val container = new RedisMessageListenerContainer
+    container.setConnectionFactory(redisConnectionFactory)
+    container.addMessageListener(messageListenerAdapter, channelTopic)
+    container
+  }
+
+  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
+    new TxDispatcher(destSpecs.asScala.toList)
+  }
+
   @Bean private[Ingrid] def metricsCommonTags = (registry: MeterRegistry) => registry.config.commonTags("app", "ingrid")
 
   @Bean private[Ingrid] def metricsNamingConvention = (registry: SimpleMeterRegistry) => registry.config.namingConvention(new NamingConvention() {
@@ -42,9 +59,6 @@ object Application {
       String.format("%s.%s.%s", name, meterType.name(), baseUnit)
     }
   })
-
-  @Bean def objectMapper: ObjectMapper = new ObjectMapper().registerModule(new DefaultScalaModule).registerModule(new ParameterNamesModule).registerModule(new Jdk8Module).registerModule(new JavaTimeModule) // new module, NOT JSR310Module
-  @Bean def redisConnectionFactory = new LettuceConnectionFactory(new RedisStandaloneConfiguration("localhost", 6379))
 
   @Bean private[Ingrid] def stringRedisTemplate(redisConnectionFactory: RedisConnectionFactory) = new StringRedisTemplate(redisConnectionFactory)
 
@@ -64,21 +78,6 @@ object Application {
     * redis MQ
     */
   @Bean private[Ingrid] def channelTopic = new ChannelTopic("dts")
-
-  @Bean def messageListenerAdapter(txEventConsumer: TxEventConsumer) = new MessageListenerAdapter(txEventConsumer)
-
-  @Bean def redisMessageListenerContainer(redisConnectionFactory: RedisConnectionFactory, messageListenerAdapter: MessageListenerAdapter, channelTopic: ChannelTopic): RedisMessageListenerContainer = {
-    val container = new RedisMessageListenerContainer
-    container.setConnectionFactory(redisConnectionFactory)
-    container.addMessageListener(messageListenerAdapter, channelTopic)
-    container
-  }
-
-  @Bean
-  def destSpecs(destSpecs: java.util.List[TxDestSpec]): List[TxDestSpec] = destSpecs.asScala.toList
-//  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
-//    new TxDispatcher(destSpecs.asScala.toList)
-//  }
 
   @Bean private[Ingrid] def cxService(metrics: MeterRegistry, executors: java.util.List[CxExecutor]) = {
     new CxService(metrics, executors.asScala.toList)
