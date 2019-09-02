@@ -3,7 +3,9 @@ package io.github.oxnz.Ingrid.cx
 import io.github.oxnz.Ingrid.tx.TxCategory
 import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.{Logger, LoggerFactory}
+import org.springframework.stereotype.Service
 
+@Service
 class CxService(private final val metrics: MeterRegistry, executors: List[CxExecutor]) {
   final private[cx] val log: Logger = LoggerFactory.getLogger(getClass)
   require(executors.nonEmpty, "executors should not be empty")

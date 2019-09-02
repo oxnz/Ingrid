@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import io.github.oxnz.Ingrid.article.Article
-import io.github.oxnz.Ingrid.cx.{CxExecutor, CxService}
+import io.github.oxnz.Ingrid.cx.CxExecutor
 import io.github.oxnz.Ingrid.tx._
 import io.micrometer.core.instrument.config.NamingConvention
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
@@ -48,9 +48,9 @@ object Application {
     container
   }
 
-  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
-    new TxDispatcher(destSpecs.asScala.toList)
-  }
+  @Bean def destSpecs(destSpecs: java.util.List[TxDestSpec]): List[TxDestSpec] = destSpecs.asScala.toList
+
+  @Bean def executors(executors: java.util.List[CxExecutor]): List[CxExecutor] = executors.asScala.toList
 
   @Bean private[Ingrid] def metricsCommonTags = (registry: MeterRegistry) => registry.config.commonTags("app", "ingrid")
 
@@ -78,8 +78,4 @@ object Application {
     * redis MQ
     */
   @Bean private[Ingrid] def channelTopic = new ChannelTopic("dts")
-
-  @Bean private[Ingrid] def cxService(metrics: MeterRegistry, executors: java.util.List[CxExecutor]) = {
-    new CxService(metrics, executors.asScala.toList)
-  }
 }

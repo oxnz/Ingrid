@@ -1,17 +1,15 @@
 package io.github.oxnz.Ingrid.tx
 
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Component
 
+@Component
 class TxDispatcher(destSpecs: List[TxDestSpec]) {
   require(destSpecs.nonEmpty, "destSepcs should not be empty")
 
   final private val log = LoggerFactory.getLogger(getClass)
   private val dispatches: Map[String, Set[TxDestSpec]] = destSpecs.groupBy(dispatchKey)
     .map { case (k, v) => (k, v.toSet) }
-
-  def this(destSpecs: TxDestSpec*) = {
-    this(destSpecs.toList)
-  }
 
   def dispatch(record: TxRecord): Set[TxDestSpec] = {
     require(record != null, "record should not be null")
