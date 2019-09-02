@@ -7,7 +7,7 @@ import org.slf4j.{Logger, LoggerFactory}
 class CxService(private final val metrics: MeterRegistry, executors: List[CxExecutor]) {
   final private[cx] val log: Logger = LoggerFactory.getLogger(getClass)
   require(executors.nonEmpty, "executors should not be empty")
-  private final val completors: Map[TxCategory, CxExecutor] =
+  private final val dispatches: Map[TxCategory, CxExecutor] =
     executors.groupBy(dispatchKey).map { case (k, v) => (k, v.head) }
 
   private def dispatchKey(executor: CxExecutor): TxCategory = {
@@ -38,9 +38,7 @@ class CxService(private final val metrics: MeterRegistry, executors: List[CxExec
   }
 
   private def dispatch(request: CxRequest): CxExecutor = {
-    synchronized {
-      completors.apply(request.cat)
-    }
+    dispatches.apply(request.cat)
   }
 
   private object MetricsNames {
