@@ -18,7 +18,7 @@ class UserService(@Autowired private val userRepository: UserRepository) {
   }
 
   @PreAuthorize("hasRole('user')")
-  def create(user: User) : Long = {
+  def create(user: User): Long = {
     userRepository.save(user)
     user.id
   }

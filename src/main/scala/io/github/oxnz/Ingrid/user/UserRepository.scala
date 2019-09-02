@@ -16,21 +16,15 @@ object UserRepository {
 @Repository class UserRepository(var objectMapper: ObjectMapper, var redisTemplate: StringRedisTemplate) {
   private var hashOperations: HashOperations[String, String, String] = redisTemplate.opsForHash()
 
+  def findOne(id: Long): User = {
+    val s = hashOperations.get(UserRepository.KEY, String.valueOf(id)).asInstanceOf[String]
+    readUser(s)
+  }
+
   private def readUser(s: String) = try objectMapper.readValue(s, classOf[User])
   catch {
     case e: IOException =>
       throw new RuntimeException(e)
-  }
-
-  private def writeUser(user: User) = try objectMapper.writeValueAsString(user)
-  catch {
-    case e: JsonProcessingException =>
-      throw new RuntimeException(e)
-  }
-
-  def findOne(id: Long): User = {
-    val s = hashOperations.get(UserRepository.KEY, String.valueOf(id)).asInstanceOf[String]
-    readUser(s)
   }
 
   def findAll: List[User] = {
@@ -41,5 +35,11 @@ object UserRepository {
   def save(user: User): Unit = {
     val s = writeUser(user)
     hashOperations.put(UserRepository.KEY, String.valueOf(user.id), s)
+  }
+
+  private def writeUser(user: User) = try objectMapper.writeValueAsString(user)
+  catch {
+    case e: JsonProcessingException =>
+      throw new RuntimeException(e)
   }
 }
