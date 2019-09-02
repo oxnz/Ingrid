@@ -20,6 +20,14 @@ import org.springframework.web.bind.annotation.{GetMapping, PostMapping, Request
     "index"
   }
 
+  private def process(request: TxRequest): TxResponse = {
+    var record: TxRecord = new TxRecord(request.cat, request.ref, request.state, request.city)
+    record = txRecordRepo.save(record)
+    val event: TxEvent = new TxEvent(record.id)
+    messageProducer.publish(event)
+    new TxResponse(record.id)
+  }
+
   @GetMapping(Array("records")) def txRecords(model: Model): String = {
     val records: lang.Iterable[TxRecord] = txRecordRepo.findAll
     model.addAttribute("records", records)
@@ -30,13 +38,5 @@ import org.springframework.web.bind.annotation.{GetMapping, PostMapping, Request
     val results: lang.Iterable[TxResult] = txResultRepo.findAll
     model.addAttribute("results", results)
     "admin/tx/results"
-  }
-
-  private def process(request: TxRequest): TxResponse = {
-    var record: TxRecord = new TxRecord(request.cat, request.ref, request.state, request.city)
-    record = txRecordRepo.save(record)
-    val event: TxEvent = new TxEvent(record.id)
-    messageProducer.publish(event)
-    new TxResponse(record.id)
   }
 }

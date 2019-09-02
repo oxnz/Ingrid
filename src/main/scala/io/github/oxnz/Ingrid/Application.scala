@@ -74,9 +74,11 @@ object Application {
     container
   }
 
-  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
-    new TxDispatcher(destSpecs.asScala.toList)
-  }
+  @Bean
+  def destSpecs(destSpecs: java.util.List[TxDestSpec]): List[TxDestSpec] = destSpecs.asScala.toList
+//  @Bean def txDispatcher(destSpecs: java.util.List[TxDestSpec]): TxDispatcher = {
+//    new TxDispatcher(destSpecs.asScala.toList)
+//  }
 
   @Bean private[Ingrid] def cxService(metrics: MeterRegistry, executors: java.util.List[CxExecutor]) = {
     new CxService(metrics, executors.asScala.toList)

@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutionException
 
 import io.github.oxnz.Ingrid.cx.{CxRequest, CxResponse, CxService}
 import javax.persistence.NoResultException
-import org.apache.http.client.methods.HttpPost
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.stereotype.Service
 

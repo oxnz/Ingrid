@@ -10,13 +10,6 @@ class CxService(private final val metrics: MeterRegistry, executors: List[CxExec
   private final val dispatches: Map[TxCategory, CxExecutor] =
     executors.groupBy(dispatchKey).map { case (k, v) => (k, v.head) }
 
-  private def dispatchKey(executor: CxExecutor): TxCategory = {
-    require(executor != null, "executor should not be null")
-    val clazz = executor.getClass
-    require(clazz.isAnnotationPresent(classOf[CxCategory]), "region annotation is required")
-    clazz.getAnnotation(classOf[CxCategory]).cat()
-  }
-
   def process(request: CxRequest): CxResponse = {
     require(request != null, "request should not be null")
     var response = execute(request)
@@ -39,6 +32,13 @@ class CxService(private final val metrics: MeterRegistry, executors: List[CxExec
 
   private def dispatch(request: CxRequest): CxExecutor = {
     dispatches.apply(request.cat)
+  }
+
+  private def dispatchKey(executor: CxExecutor): TxCategory = {
+    require(executor != null, "executor should not be null")
+    val clazz = executor.getClass
+    require(clazz.isAnnotationPresent(classOf[CxCategory]), "region annotation is required")
+    clazz.getAnnotation(classOf[CxCategory]).cat()
   }
 
   private object MetricsNames {

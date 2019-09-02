@@ -2,10 +2,9 @@ package io.github.oxnz.Ingrid.tx
 
 import java.io.IOException
 import java.security.{KeyManagementException, KeyStoreException, NoSuchAlgorithmException}
-import java.util.concurrent.{ExecutionException, Executors}
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.{ExecutionException, Executors}
 
-import javax.annotation.PreDestroy
 import javax.net.ssl.HostnameVerifier
 import org.apache.http.HttpResponse
 import org.apache.http.client.ResponseHandler
