@@ -51,12 +51,12 @@ class CxFieldAccessor() {
   }
 
   def opt[T](field: CxField): Option[CxValue[T]] = {
-    if (has(field)) Some(CxFieldAccessor.OBJECT_MAPPER.treeToValue(root.get(field.name()), classOf[CxValue[_]]).asInstanceOf[CxValue[T]]) else None
+    if (has(field)) Some(CxFieldAccessor.OBJECT_MAPPER.treeToValue(root.get(field.name()), classOf[CxValue[T]])) else None
   }
 
-  def value[T](field: CxField): Option[T] = opt(field).asInstanceOf[Option[CxValue[T]]].map(_.value).filter(_ != null)
+  def value[T](field: CxField): Option[T] = opt(field).map((v: CxValue[T]) => v.value).filter(_ != null)
 
-  def defaultValue[T](field: CxField): Option[T] = opt(field).asInstanceOf[Option[CxValue[T]]].map(_.defaultValue).filter(_ != null)
+  def defaultValue[T](field: CxField): Option[T] = opt(field).map((v: CxValue[T]) => v.defaultValue).filter(_ != null)
 
   def valueOrDefault[T](field: CxField): Option[T] = value(field).orElse(defaultValue(field))
 
