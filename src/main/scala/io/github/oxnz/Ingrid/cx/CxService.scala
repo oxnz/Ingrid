@@ -25,8 +25,8 @@ class CxService(private final val metrics: MeterRegistry, executors: List[CxExec
   }
 
   private def execute(request: CxRequest): CxResponse = {
-    var executor = dispatch(request)
-    var response: CxResponse = Try(executor.execute(request)) match {
+    val executor = dispatch(request)
+    val response: CxResponse = Try(executor.execute(request)) match {
       case Success(resp) => resp
       case Failure(exception) => new CxResponse(false, exception.getMessage)
     }
