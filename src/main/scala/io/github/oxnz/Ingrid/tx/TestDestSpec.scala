@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
   final private val CHECKIN_URI = URI.create("http://localhost:8000/echo")
   final private val requestConfig = RequestConfig.DEFAULT
 
-  override val intestedCats: Set[TxCategory] = Set(TxCategory.CHECKIN)
+  override val intestedCats: Set[TxCategory] = Set(TxCategory.ADDRESS)
 
   override val responseHandler: TxHttpRespHandler = {
     entity: HttpEntity => {

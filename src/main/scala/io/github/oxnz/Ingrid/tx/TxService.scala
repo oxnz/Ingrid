@@ -41,7 +41,7 @@ import scala.util.{Failure, Success, Try}
         log.error("transfer", exception)
         new TxHttpExecResult(false, exception.getMessage)
     }
-    val txResult: TxResult = new TxResult(record, httpExecResult.succeeded, httpExecResult.message)
+    val txResult: TxResult = new TxResult(record, httpExecResult.succ, httpExecResult.msg)
     txResultRepo.save(txResult)
     log.debug("result: {}", txResult)
   }

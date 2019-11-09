@@ -9,6 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TxRegion {
     String state() default "";
-
     String city() default "";
 }
