@@ -5,6 +5,10 @@ public enum CxField {
     CREATED_AT,
     UPDATED_AT,
 
+    USER,
+    ADDRESS,
+    SUBJECTS,
+
     /** user field */
     ID,
     NAME,

@@ -1,7 +1,8 @@
 package io.github.oxnz.Ingrid.cx;
 
 import org.junit.Test;
-import scala.Option;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -11,8 +12,8 @@ public class CxFieldAccessorTest {
     public void opt() {
         CxFieldAccessor accessor = new CxFieldAccessor();
         accessor.put(CxField.ID, CxDataSource.INTERNAL, 1234L, -1L);
-        assertEquals(1234L, accessor.opt(CxField.ID).get().value());
-        assertTrue(accessor.opt(CxField.NAME).isEmpty());
+        assertEquals(1234L, accessor.optValue(CxField.ID).get().value());
+        assertTrue(accessor.optValue(CxField.NAME).isEmpty());
     }
 
     @Test
@@ -60,7 +61,21 @@ public class CxFieldAccessorTest {
     }
 
     @Test
-    public void put() {
+    public void accessors() {
+        String record = new CxFieldAccessor()
+                .put(CxField.SUBJECTS, List.of(new CxFieldAccessor()
+                        .put(CxField.NAME, CxDataSource.INTERNAL, null, "CHEN")
+                        .put(CxField.ADDRESS, new CxFieldAccessor()
+                                .put(CxField.STATE, CxDataSource.EXTERNAL, "California", null)
+                                .put(CxField.CITY, CxDataSource.EXTERNAL, "Los Angles", null)),
+                        new CxFieldAccessor()
+                        .put(CxField.NAME, CxDataSource.INTERNAL, "LILI", null)
+                        )).toString();
+        scala.collection.immutable.List<CxFieldAccessor> accessors = CxFieldAccessor.apply(record).accessors(CxField.SUBJECTS);
+        assertEquals(2, accessors.size());
+        assertEquals("CHEN", accessors.head().valueOrDefault(CxField.NAME).get());
+        assertEquals("California", accessors.head().accessor(CxField.ADDRESS).get().valueOrDefault(CxField.STATE).get());
+        assertEquals("LILI", accessors.last().valueOrDefault(CxField.NAME).get());
     }
 
     @Test

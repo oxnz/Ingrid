@@ -1,7 +1,7 @@
 package io.github.oxnz.Ingrid.cx
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.{JsonNodeFactory, ObjectNode}
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
@@ -16,10 +16,13 @@ object CxFieldAccessor {
     .registerModule(new ParameterNamesModule)
     .registerModule(new Jdk8Module)
     .registerModule(new JavaTimeModule)
+
+  def apply(string: String): CxFieldAccessor = new CxFieldAccessor(OBJECT_MAPPER.readTree(string).asInstanceOf[ObjectNode])
 }
 
-class CxFieldAccessor() {
-  final private val root = new ObjectNode(JsonNodeFactory.instance)
+class CxFieldAccessor(final private val root: ObjectNode) {
+
+  def this() = this(CxFieldAccessor.OBJECT_MAPPER.createObjectNode())
 
   def has(field: CxField): Boolean = root.has(field.name)
 
@@ -34,6 +37,8 @@ class CxFieldAccessor() {
     if (accessor.size > 0) root.set(field.name, accessor.root)
     this
   }
+
+  def put[T](field: CxField, accessors: java.util.List[CxFieldAccessor]): CxFieldAccessor = put(field, accessors.asScala.toList)
 
   def put[T](field: CxField, accessors: List[CxFieldAccessor]): CxFieldAccessor = {
     val objectNodes = accessors.filter(_.size > 0).map(_.root)
@@ -50,13 +55,19 @@ class CxFieldAccessor() {
     this
   }
 
-  def opt[T](field: CxField): Option[CxValue[T]] = {
-    if (has(field)) Some(CxFieldAccessor.OBJECT_MAPPER.treeToValue(root.get(field.name()), classOf[CxValue[T]])) else None
-  }
+  private def opt(field: CxField) = Some(field).filter(has).map(f => root.get(f.name))
 
-  def value[T](field: CxField): Option[T] = opt(field).map((v: CxValue[T]) => v.value).filter(_ != null)
+  private def opt[T](field: CxField, clazz: Class[T]): Option[T] = Some(field).filter(has).map(f => CxFieldAccessor.OBJECT_MAPPER.treeToValue(root.get(f.name()), clazz))
 
-  def defaultValue[T](field: CxField): Option[T] = opt(field).map((v: CxValue[T]) => v.defaultValue).filter(_ != null)
+  def accessor(field: CxField): Option[CxFieldAccessor] = opt(field).map(n => new CxFieldAccessor(n.asInstanceOf[ObjectNode]))
+
+  def accessors(field: CxField): List[CxFieldAccessor] = opt(field).getOrElse(CxFieldAccessor.OBJECT_MAPPER.createArrayNode()).asScala.toList.map(obj => new CxFieldAccessor(obj.asInstanceOf[ObjectNode]))
+
+  def optValue[T](field: CxField): Option[CxValue[T]] = opt(field, classOf[CxValue[T]])
+
+  def value[T](field: CxField): Option[T] = optValue(field).map((v: CxValue[T]) => v.value).filter(_ != null)
+
+  def defaultValue[T](field: CxField): Option[T] = optValue(field).map((v: CxValue[T]) => v.defaultValue).filter(_ != null)
 
   def valueOrDefault[T](field: CxField): Option[T] = value(field).orElse(defaultValue(field))
 
