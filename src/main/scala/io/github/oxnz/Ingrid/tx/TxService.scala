@@ -25,6 +25,7 @@ import scala.util.{Failure, Success, Try}
       record.data = cxResponse.data
       txRecordRepo.save(record)
       val destSpecs: Set[TxDestSpec] = dispatcher.dispatch(record)
+      log.debug("dispatch: {} => {}", record, destSpecs)
       destSpecs.foreach(process(record, _))
       record.status = TxStatus.SENT
     } catch {

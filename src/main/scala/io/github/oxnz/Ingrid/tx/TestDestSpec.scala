@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-@TxRegion(state = "CA", city = "SF") class TestDestSpec extends TxDestSpec {
+@TxRegion(state = "never-land", city = "lost-city") class TestDestSpec extends TxDestSpec {
   final private val log = LoggerFactory.getLogger(getClass)
   final private val CHECKIN_URI = URI.create("http://localhost:8000/echo")
   final private val requestConfig = RequestConfig.DEFAULT
 
-  override val intestedCats: Set[TxCategory] = Set(TxCategory.ADDRESS)
+  override def isInterested(cat: TxCategory): Boolean = TxCategory.ADDRESS == cat
 
   override val responseHandler: TxHttpRespHandler = {
     entity: HttpEntity => {
