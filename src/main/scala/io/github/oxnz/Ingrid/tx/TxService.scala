@@ -20,7 +20,8 @@ import scala.util.{Failure, Success, Try}
       record.status = TxStatus.CONSUMED
       val cxRequest: CxRequest = new CxRequest(record.cat, record.ref)
       val cxResponse: CxResponse = cxService.process(cxRequest)
-      if (!cxResponse.succ) throw new IllegalStateException("cxService failed")
+      log.debug("cx.service: {} -> {}", cxRequest, cxResponse)
+      if (!cxResponse.succ) throw new IllegalStateException("cx.service failed")
       record.status = TxStatus.COMPLETED
       record.data = cxResponse.data
       txRecordRepo.save(record)

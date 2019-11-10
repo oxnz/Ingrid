@@ -1,6 +1,6 @@
 package io.github.oxnz.Ingrid.tx
 
-import javax.persistence.{Entity, GeneratedValue, GenerationType, Id}
+import javax.persistence.{Column, Entity, GeneratedValue, GenerationType, Id}
 
 import scala.beans.BeanProperty
 
@@ -8,7 +8,7 @@ import scala.beans.BeanProperty
   @Id
   @BeanProperty
   @GeneratedValue(strategy = GenerationType.AUTO) var id = 0L
-  @BeanProperty var data: String = _
+  @BeanProperty @Column(length=10240) var data: String = _
 
   def this() {
     this(null, null, null, null)

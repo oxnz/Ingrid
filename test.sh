@@ -6,7 +6,7 @@ state='never-land'
 city='lost-city'
 curl -X POST -H 'Content-Type: application/json' "$recordURL" -d @- <<EOF
 {
-	"cat":"ADDRESS",
+	"cat":"USER",
 	"ref":1234,
 	"state":"$state",
 	"city":"$city"
