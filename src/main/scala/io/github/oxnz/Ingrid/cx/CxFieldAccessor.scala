@@ -22,7 +22,9 @@ object CxFieldAccessor {
 
 class CxFieldAccessor(final private val root: ObjectNode) {
 
-  def this() = this(CxFieldAccessor.OBJECT_MAPPER.createObjectNode())
+  import CxFieldAccessor._
+
+  def this() = this(OBJECT_MAPPER.createObjectNode())
 
   def has(field: CxField): Boolean = root.has(field.name)
 
@@ -48,20 +50,20 @@ class CxFieldAccessor(final private val root: ObjectNode) {
 
   def put[T](field: CxField, dataSource: CxDataSource, @Nullable value: T): CxFieldAccessor = put(field, dataSource, value, null)
 
-  def put[T](field: CxField, dataSource: CxDataSource, @Nullable value: T, @Nullable defaultValue: T): CxFieldAccessor = put(field, new CxValue[T](dataSource, value, defaultValue))
+  def put[T](field: CxField, dataSource: CxDataSource, @Nullable value: T, @Nullable defaultValue: T): CxFieldAccessor = put(field, CxValue[T](dataSource, value, defaultValue))
 
   def put[T](field: CxField, value: CxValue[T]): CxFieldAccessor = {
-    root.set(field.name, CxFieldAccessor.OBJECT_MAPPER.valueToTree(value))
+    root.set(field.name, OBJECT_MAPPER.valueToTree(value))
     this
   }
 
   private def opt(field: CxField) = Some(field).filter(has).map(f => root.get(f.name))
 
-  private def opt[T](field: CxField, clazz: Class[T]): Option[T] = Some(field).filter(has).map(f => CxFieldAccessor.OBJECT_MAPPER.treeToValue(root.get(f.name()), clazz))
+  private def opt[T](field: CxField, clazz: Class[T]): Option[T] = Some(field).filter(has).map(f => OBJECT_MAPPER.treeToValue(root.get(f.name()), clazz))
 
   def accessor(field: CxField): Option[CxFieldAccessor] = opt(field).map(n => new CxFieldAccessor(n.asInstanceOf[ObjectNode]))
 
-  def accessors(field: CxField): List[CxFieldAccessor] = opt(field).getOrElse(CxFieldAccessor.OBJECT_MAPPER.createArrayNode()).asScala.toList.map(obj => new CxFieldAccessor(obj.asInstanceOf[ObjectNode]))
+  def accessors(field: CxField): List[CxFieldAccessor] = opt(field).getOrElse(OBJECT_MAPPER.createArrayNode()).asScala.toList.map(obj => new CxFieldAccessor(obj.asInstanceOf[ObjectNode]))
 
   def optValue[T](field: CxField): Option[CxValue[T]] = opt(field, classOf[CxValue[T]])
 
@@ -73,6 +75,6 @@ class CxFieldAccessor(final private val root: ObjectNode) {
 
   def valueOrDefault[T](field: CxField, @Nullable defaultValue: T): T = value(field).getOrElse(defaultValue)
 
-  override def toString: String = CxFieldAccessor.OBJECT_MAPPER.writerWithDefaultPrettyPrinter.writeValueAsString(root)
+  override def toString: String = OBJECT_MAPPER.writerWithDefaultPrettyPrinter.writeValueAsString(root)
 
 }
