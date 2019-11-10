@@ -20,11 +20,11 @@ object CxFieldAccessor {
   def apply(string: String): CxFieldAccessor = new CxFieldAccessor(OBJECT_MAPPER.readTree(string).asInstanceOf[ObjectNode])
 }
 
-class CxFieldAccessor(final private val root: ObjectNode) {
+class CxFieldAccessor private(final private val root: ObjectNode) {
 
   import CxFieldAccessor._
 
-  def this() = this(OBJECT_MAPPER.createObjectNode())
+  def this() = this(CxFieldAccessor.OBJECT_MAPPER.createObjectNode())
 
   def has(field: CxField): Boolean = root.has(field.name)
 
