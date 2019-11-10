@@ -16,12 +16,10 @@ class TxDispatcher(destSpecs: List[TxDestSpec]) {
 
   private def dispatch(state: String, city: String, cat: TxCategory): Set[TxDestSpec] = {
     require(cat != null, "category should not be null")
-    dispatchKeys(state, city).collect(dispatches).flatten.filter(_.isInterested(cat))
+    Set(key("", ""), key(state, ""), key(state, city)).collect(dispatches).flatten.filter(_.isInterested(cat))
   }
 
-  private def dispatchKeys(state: String, city: String) = Set(dispatchKey("", ""), dispatchKey(state, ""), dispatchKey(state, city))
-
-  private def dispatchKey(state: String, city: String) = {
+  private def key(state: String, city: String) = {
     require(state != null, "state should no be null")
     require(city != null, "city should not be null")
     String.join("/", state, city)
@@ -34,6 +32,6 @@ class TxDispatcher(destSpecs: List[TxDestSpec]) {
     val clazz = destSpec.getClass
     require(clazz.isAnnotationPresent(classOf[TxRegion]), "region annotation is required")
     val region = clazz.getAnnotation(classOf[TxRegion])
-    dispatchKey(region.state, region.city)
+    key(region.state, region.city)
   }
 }
