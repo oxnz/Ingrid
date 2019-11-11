@@ -30,20 +30,24 @@ class CxFieldAccessor private(final private val root: ObjectNode) {
 
   def size: Int = root.size
 
+  def isEmpty: Boolean = size == 0
+
+  def nonEmpty: Boolean = !isEmpty
+
   def put(accessor: CxFieldAccessor): CxFieldAccessor = {
     root.setAll(accessor.root)
     this
   }
 
   def put[T](field: CxField, accessor: CxFieldAccessor): CxFieldAccessor = {
-    if (accessor.size > 0) root.set(field.name, accessor.root)
+    if (accessor.nonEmpty) root.set(field.name, accessor.root)
     this
   }
 
   def put[T](field: CxField, accessors: java.util.List[CxFieldAccessor]): CxFieldAccessor = put(field, accessors.asScala.toList)
 
   def put[T](field: CxField, accessors: List[CxFieldAccessor]): CxFieldAccessor = {
-    val objectNodes = accessors.filter(_.size > 0).map(_.root)
+    val objectNodes = accessors.filter(a => a.nonEmpty).map(_.root)
     if (objectNodes.nonEmpty) root.putArray(field.name).addAll(objectNodes.asJavaCollection)
     this
   }
@@ -59,13 +63,13 @@ class CxFieldAccessor private(final private val root: ObjectNode) {
 
   private def opt(field: CxField) = Some(field).filter(has).map(f => root.get(f.name))
 
-  private def opt[T](field: CxField, clazz: Class[T]): Option[T] = Some(field).filter(has).map(f => OBJECT_MAPPER.treeToValue(root.get(f.name()), clazz))
+  private def optValue[T](field: CxField, clazz: Class[T]): Option[T] = Some(field).filter(has).map(f => OBJECT_MAPPER.treeToValue(root.get(f.name()), clazz))
 
   def accessor(field: CxField): Option[CxFieldAccessor] = opt(field).map(n => new CxFieldAccessor(n.asInstanceOf[ObjectNode]))
 
   def accessors(field: CxField): List[CxFieldAccessor] = opt(field).getOrElse(OBJECT_MAPPER.createArrayNode()).asScala.toList.map(obj => new CxFieldAccessor(obj.asInstanceOf[ObjectNode]))
 
-  def optValue[T](field: CxField): Option[CxValue[T]] = opt(field, classOf[CxValue[T]])
+  def optValue[T](field: CxField): Option[CxValue[T]] = optValue(field, classOf[CxValue[T]])
 
   def value[T](field: CxField): Option[T] = optValue(field).map((v: CxValue[T]) => v.value).filter(_ != null)
 
