@@ -53,10 +53,10 @@ public class CxFieldAccessorTest {
         CxFieldAccessor accessor = new CxFieldAccessor();
         assertTrue(accessor.value(CxField.NAME).isEmpty());
         accessor.put(CxField.NAME, CxDataSource.INTERNAL, null, "CHEN");
-        assertEquals("CHEN", accessor.valueOrDefault(CxField.NAME).get());
+        assertEquals("CHEN", accessor.valueOrDefault(CxField.NAME));
         assertEquals("LILI", accessor.valueOrDefault(CxField.NAME, "LILI"));
         accessor.put(CxField.ID, CxDataSource.INTERNAL, 1234L, -1L);
-        assertEquals(1234L, accessor.valueOrDefault(CxField.ID).get());
+        assertEquals(Long.valueOf(1234L), accessor.valueOrDefault(CxField.ID));
         assertEquals(Long.valueOf(1234L), accessor.valueOrDefault(CxField.ID, -9999L));
     }
 
@@ -73,9 +73,9 @@ public class CxFieldAccessorTest {
                         )).toString();
         scala.collection.immutable.List<CxFieldAccessor> accessors = CxFieldAccessor.apply(record).accessors(CxField.SUBJECTS);
         assertEquals(2, accessors.size());
-        assertEquals("CHEN", accessors.head().valueOrDefault(CxField.NAME).get());
-        assertEquals("California", accessors.head().accessor(CxField.ADDRESS).get().valueOrDefault(CxField.STATE).get());
-        assertEquals("LILI", accessors.last().valueOrDefault(CxField.NAME).get());
+        assertEquals("CHEN", accessors.head().valueOrDefault(CxField.NAME));
+        assertEquals("California", accessors.head().accessor(CxField.ADDRESS).get().valueOrDefault(CxField.STATE));
+        assertEquals("LILI", accessors.last().valueOrDefault(CxField.NAME));
     }
 
     @Test

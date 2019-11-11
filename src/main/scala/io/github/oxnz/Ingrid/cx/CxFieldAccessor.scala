@@ -71,7 +71,7 @@ class CxFieldAccessor private(final private val root: ObjectNode) {
 
   def defaultValue[T](field: CxField): Option[T] = optValue(field).map((v: CxValue[T]) => v.defaultValue).filter(_ != null)
 
-  def valueOrDefault[T](field: CxField): Option[T] = value(field).orElse(defaultValue(field))
+  def valueOrDefault[T](field: CxField): T = value(field).orElse(defaultValue(field)).get
 
   def valueOrDefault[T](field: CxField, @Nullable defaultValue: T): T = value(field).getOrElse(defaultValue)
 
