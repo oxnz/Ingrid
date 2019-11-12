@@ -2,9 +2,11 @@ package io.github.oxnz.Ingrid.cx;
 
 import org.junit.Test;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -64,20 +66,24 @@ public class CxFieldAccessorTest {
 
     @Test
     public void accessors() {
+        LocalDateTime now = LocalDateTime.now(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
         String record = new CxFieldAccessor()
                 .put(CxField.SUBJECTS, List.of(new CxFieldAccessor()
-                        .put(CxField.NAME, CxDataSource.INTERNAL, null, "CHEN")
-                        .put(CxField.ADDRESS, new CxFieldAccessor()
-                                .put(CxField.STATE, CxDataSource.EXTERNAL, "California", null)
-                                .put(CxField.CITY, CxDataSource.EXTERNAL, "Los Angles", null)),
+                                .put(CxField.NAME, CxDataSource.INTERNAL, null, "CHEN")
+                                .put(CxField.ADDRESS, new CxFieldAccessor()
+                                        .put(CxField.STATE, CxDataSource.EXTERNAL, "California", null)
+                                        .put(CxField.CITY, CxDataSource.EXTERNAL, "Los Angles", null)
+                                        .put(CxField.CREATED_AT, CxDataSource.EXTERNAL, now)
+                                ),
                         new CxFieldAccessor()
-                        .put(CxField.NAME, CxDataSource.INTERNAL, "LILI", null)
-                        )).toString();
+                                .put(CxField.NAME, CxDataSource.INTERNAL, "LILI", null)
+                )).toString();
         scala.collection.immutable.List<CxFieldAccessor> accessors = CxFieldAccessor.apply(record).accessors(CxField.SUBJECTS);
         assertEquals(2, accessors.size());
         assertEquals("CHEN", accessors.head().valueOrDefault(CxField.NAME));
         assertEquals("California", accessors.head().accessor(CxField.ADDRESS).get().valueOrDefault(CxField.STATE));
         assertEquals("LILI", accessors.last().valueOrDefault(CxField.NAME));
+        assertEquals(now, accessors.head().accessor(CxField.ADDRESS).get().value(CxField.CREATED_AT).get());
     }
 
     @Test

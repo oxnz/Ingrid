@@ -38,7 +38,7 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'
 
     implementation 'com.h2database:h2'
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.13', version: '2.9.9'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.13', version: '2.10.0'
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
