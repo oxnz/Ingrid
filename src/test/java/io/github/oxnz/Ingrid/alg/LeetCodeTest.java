@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -40,5 +42,11 @@ public class LeetCodeTest {
         expected = 4;
         actual = leetCode.findKthLargest(nums, k);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void iterate() {
+        Iterable iterable = List.of(1, 2);
+        Stream.of(iterable).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,6 @@
 package io.github.oxnz.Ingrid.cx
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -12,7 +11,7 @@ import org.springframework.lang.Nullable
 import scala.jdk.CollectionConverters._
 
 object CxFieldAccessor {
-  final private val OBJECT_MAPPER = new ObjectMapper().activateDefaultTyping(PolymorphicTypeValidator)
+  final private val OBJECT_MAPPER = new ObjectMapper().enableDefaultTyping()
     .registerModule(new DefaultScalaModule)
     .registerModule(new ParameterNamesModule)
     .registerModule(new Jdk8Module)
