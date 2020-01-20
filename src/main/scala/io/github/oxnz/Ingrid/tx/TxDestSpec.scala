@@ -3,7 +3,7 @@ package io.github.oxnz.Ingrid.tx
 import org.apache.http.protocol.HttpContext
 
 trait TxDestSpec {
-  def intestedCats: Set[TxCategory]
+  def isInterested(cat: TxCategory): Boolean
 
   def responseHandler: TxHttpRespHandler
 

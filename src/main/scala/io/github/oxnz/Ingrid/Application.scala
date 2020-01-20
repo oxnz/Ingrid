@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import io.github.oxnz.Ingrid.Application.RABBIT_QUEUE
 import io.github.oxnz.Ingrid.article.Article
 import io.github.oxnz.Ingrid.cx.CxExecutor
 import io.github.oxnz.Ingrid.tx._
@@ -12,6 +13,7 @@ import io.micrometer.core.instrument.config.NamingConvention
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.micrometer.core.instrument.{Meter, MeterRegistry}
 import org.slf4j.LoggerFactory
+import org.springframework.amqp.core.Queue
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
@@ -26,6 +28,8 @@ import scala.jdk.CollectionConverters._
 
 object Application {
   private val log = LoggerFactory.getLogger(classOf[Application])
+  val RABBIT_QUEUE = "rabbit"
+  val TOPIC_EXCHANGE_NAME = "topicExchangeName"
 
   def main(args: Array[String]): Unit = {
     log.info("starting ...")
@@ -78,4 +82,10 @@ object Application {
     * redis MQ
     */
   @Bean private[Ingrid] def channelTopic = new ChannelTopic("dts")
+
+  /**
+    * rabbitMQ
+    */
+  @Bean def queue():Queue = { new Queue(RABBIT_QUEUE)}
+
 }
